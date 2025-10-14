@@ -1183,16 +1183,25 @@ const getToolColor = (tool: string): string => {
 
 ---
 
-### Production Deployment (Planned)
+### Production Deployment
 
-#### Vercel Deployment
-1. Connect GitHub repository to Vercel
-2. Configure environment variables in Vercel dashboard:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - Any other secrets (Plausible domain, etc.)
-3. Deploy main branch → automatic deployments on push
-4. Preview deployments for pull requests
+#### Vercel Deployment ✅ COMPLETED
+**Status:** Live in production
+
+**Deployment Details:**
+- ✅ Repository connected: `Colgate-University-AI-Club/Club-Website`
+- ✅ Environment variables configured in Vercel dashboard
+- ✅ Automatic deployments enabled on push to main
+- ✅ Preview deployments enabled for pull requests
+- ✅ Build successful with no errors
+- ✅ All routes accessible and functional
+
+**Environment Variables Configured:**
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase anonymous key
+- (Additional secrets as needed)
+
+**Deployment URL:** [Temporary Vercel URL] (pending custom domain)
 
 #### Build Process
 ```bash
@@ -1200,11 +1209,68 @@ npm run build        # Next.js production build
 npm run start        # Start production server (port 3000)
 ```
 
-#### CI/CD Pipeline (Future)
-- GitHub Actions workflow
-- Run ESLint and TypeScript checks
-- Run build test
-- Deploy to Vercel on merge to main
+#### CI/CD Pipeline
+- ✅ GitHub repository connected to Vercel
+- ✅ Automatic deployments on push to main
+- ✅ Preview deployments for pull requests
+- ✅ Build logs available in Vercel dashboard
+- Future: GitHub Actions for additional checks (ESLint, TypeScript, tests)
+
+---
+
+### Post-Deployment Tasks
+
+#### Immediate (v1.2.0 - Next Sprint)
+
+**1. Custom Domain Setup**
+- [ ] Purchase domain (suggestions: `colgateai.org`, `colgateaiclub.com`)
+- [ ] Configure DNS settings in domain registrar
+- [ ] Add custom domain in Vercel dashboard
+- [ ] Verify domain ownership
+- [ ] Enable automatic HTTPS
+- [ ] Update `NEXT_PUBLIC_BASE_URL` environment variable
+
+**2. n8n Job Sync Workflow**
+- [ ] Create n8n workflow for job board API integration
+- [ ] Configure webhook endpoint: `/api/jobs` (POST)
+- [ ] Set up scheduled trigger (daily or weekly)
+- [ ] Implement job data transformation logic
+- [ ] Test upsert functionality to Supabase
+- [ ] Add error handling and notifications
+- [ ] Document workflow in PRD and CLAUDE.md
+
+**3. Job Check & Refresh Automation**
+- [ ] Create manual refresh button on jobs page (already exists)
+- [ ] Add loading states and feedback
+- [ ] Implement cache invalidation
+- [ ] Add last-updated timestamp display
+- [ ] Optional: Add automatic background refresh every X minutes
+
+**4. Final UI/UX Adjustments**
+- [ ] Review all pages on mobile devices
+- [ ] Test navigation flow
+- [ ] Verify color contrast for accessibility
+- [ ] Add loading skeletons for async content
+- [ ] Polish animations and transitions
+- [ ] Test with different browsers (Chrome, Firefox, Safari, Edge)
+
+**5. Performance Optimization**
+- [ ] Run Lighthouse audit
+- [ ] Optimize images (convert to WebP, add lazy loading)
+- [ ] Implement code splitting for large components
+- [ ] Add proper caching headers
+- [ ] Minimize bundle size
+- [ ] Test page load times
+
+#### Future Enhancements (v1.3.0+)
+- [ ] Dedicated newsletter archive page with pagination
+- [ ] Analytics integration (Plausible)
+- [ ] Google Calendar API sync for events
+- [ ] Open Graph meta tags for social sharing
+- [ ] Structured data (JSON-LD) for SEO
+- [ ] Admin dashboard for content management
+- [ ] User authentication for member features
+- [ ] Email notifications for new jobs/events
 
 ---
 
@@ -1544,7 +1610,16 @@ supabase
 
 ## Changelog
 
-### v1.0.0 (Current - October 14, 2025)
+### v1.1.0 (Current - October 14, 2025)
+- ✅ **DEPLOYED TO VERCEL** - Production site live
+- ✅ Project type system (code/no-code/hybrid)
+- ✅ Dual filtering (type + level) on projects page
+- ✅ Tool color categorization
+- ✅ Enhanced project detail pages
+- ✅ All 7 projects with GitHub integration
+- ✅ Updated documentation (PRD.md, CLAUDE.md)
+
+### v1.0.0 (Completed - October 13, 2025)
 - ✅ All core pages implemented
 - ✅ News sync automation (n8n)
 - ✅ Jobs board with Supabase + real-time updates
@@ -1554,11 +1629,14 @@ supabase
 - ✅ Responsive design (mobile + desktop)
 - ✅ Contribution form with rate limiting
 
-### v0.9.0 (Planned - Late October 2025)
-- Dedicated newsletter archive page
-- Newsletter pagination
-- Analytics integration (Plausible)
-- Google Calendar API sync
+### v1.2.0 (Planned - Next)
+- [ ] Custom domain setup and DNS configuration
+- [ ] n8n job sync workflow (automated job board updates)
+- [ ] Job check & refresh automation
+- [ ] Final UI/UX adjustments
+- [ ] Performance optimization
+- [ ] Analytics integration (Plausible)
+- [ ] Google Calendar API sync
 
 ### v0.8.0 (Completed - Early October 2025)
 - Initial MVP release
@@ -1708,14 +1786,21 @@ colgate-ai-club/
 
 ## Conclusion
 
-The Colgate AI Club Website is a modern, scalable platform designed to serve the AI/ML community at Colgate University. With a solid foundation in place (85% complete), the project is ready for production deployment and future enhancements.
+The Colgate AI Club Website is a modern, scalable platform designed to serve the AI/ML community at Colgate University. **The site is now live in production on Vercel** with comprehensive project type support and full feature parity.
 
-**Next Immediate Steps:**
-1. Complete newsletter archive page (`/newsletters`)
-2. Integrate analytics (Plausible)
-3. Deploy to Vercel (production)
-4. Test performance and accessibility
-5. Launch publicly and promote to Colgate students
+**Current Status: v1.1.0 - DEPLOYED ✅**
+
+**Next Immediate Steps (v1.2.0):**
+1. ~~Deploy to Vercel~~ ✅ **COMPLETED**
+2. Purchase and configure custom domain
+3. Set up n8n job sync workflow for automated job board updates
+4. Implement job check & refresh automation
+5. Final UI/UX adjustments and polish
+6. Performance optimization (Lighthouse audit)
+7. Complete newsletter archive page (`/newsletters`)
+8. Integrate analytics (Plausible)
+9. Test accessibility with screen readers
+10. Launch publicly and promote to Colgate students
 
 **Long-term Vision:**
 - Become the central hub for AI/ML at Colgate
