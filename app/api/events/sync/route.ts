@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
       const parsedData = JSON.parse(fileContent);
       // Handle both old format (array) and new format (object with events array)
       existingEvents = Array.isArray(parsedData) ? parsedData : parsedData.events || [];
-    } catch (error) {
+    } catch {
       console.log('No existing events file found, creating new one');
       existingEvents = [];
     }

@@ -7,7 +7,6 @@ import { paginateArray } from '@/lib/paginate'
 import EnhancedJobCard from '@/components/jobs/EnhancedJobCard'
 import JobModal from '@/components/jobs/JobModal'
 import JobFiltersComponent, { JobFilters, SortOption } from '@/components/jobs/JobFilters'
-import Pagination from '@/components/common/Pagination'
 import { Button } from '@/components/ui/button'
 import {
   fetchJobs,

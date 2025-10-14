@@ -245,29 +245,58 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 - **Data Source:** `app/data/events.json`
 
 #### 6. **Projects Page** (`/projects`)
-- **Status:** ✅ Complete
-- **Description:** Project catalog with filtering
+- **Status:** ✅ Complete (Enhanced with Project Type System)
+- **Description:** Project catalog with dual filtering (type + level)
 - **Features:**
-  - Level-based filtering (beginner/intermediate/advanced)
+  - **Dual filtering system:**
+    - Project type filtering (code/no-code/hybrid) with icons and emojis
+    - Level-based filtering (beginner/intermediate/advanced)
+    - Both filters work together via URL query parameters
+    - "All" option for each filter dimension
   - Filter buttons using Next.js Link components for URL-based navigation
-  - "All" filter to clear active filters
+  - Project type badges with color coding:
+    - Code projects: Blue (💻)
+    - No-code projects: Purple (⚡)
+    - Hybrid projects: Green (🔀)
   - Difficulty level badges with color coding
   - Duration indicators (estimated hours)
+  - Tools display (max 4 visible, "+X more" overflow)
   - Project summaries
   - GitHub repository integration (displays repo stats when available)
+  - Workflow URL support for no-code projects
   - Graceful handling of non-existent repositories
   - Links to individual project pages
 - **Files:** `app/projects/page.tsx`, `components/projects/ProjectCard.tsx`
 - **Data Source:** `app/data/projects.json`
 - **Technical Notes:**
   - Filter buttons MUST be `<Link>` components, not static `<button>` elements
-  - Query parameter format: `?level=beginner`
-  - GitHub stats fetched via `/api/github/repo-info` endpoint
+  - Query parameter format: `?type=no-code&level=beginner`
+  - Both filters preserve each other's state when changed
+  - GitHub stats fetched via `/api/github/[owner]/[repo]` endpoint
 
 #### 7. **Project Detail Page** (`/projects/[slug]`)
-- **Status:** ✅ Complete
+- **Status:** ✅ Complete (Enhanced with Project Type Information)
 - **Description:** Individual project view with comprehensive markdown guides
 - **Features:**
+  - **Project Type Section:**
+    - Large, prominent badge showing project type (code/no-code/hybrid)
+    - Icon display (Code/Zap/Layers from lucide-react)
+    - Descriptive text explaining the project type
+    - Color-coded border and background
+  - **Tools & Technologies Section:**
+    - All required tools displayed as colored badges
+    - Automatic color categorization:
+      - Programming languages: Blue
+      - No-code tools (n8n, Make.com, etc.): Purple
+      - AI APIs (OpenAI, Anthropic, etc.): Green
+      - Databases (PostgreSQL, Pinecone, etc.): Orange
+      - Default: Gray
+    - Hover effects on tool badges
+  - **Prerequisites Callout:**
+    - Blue-bordered callout box
+    - Icon indicator
+    - Lists all tools with "key" or "account/installation" requirement
+    - Based on tools array
   - Full project description (markdown body rendered with ReactMarkdown)
   - Comprehensive markdown content (2000+ words):
     - Project overview
@@ -277,7 +306,11 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
     - Code examples and snippets
     - Expected outcomes
   - Resource links (tutorials, docs, datasets, tools)
-  - GitHub repository link with stats
+  - **Enhanced Repository/Workflow Buttons:**
+    - GitHub repository link with GitHub icon (for code projects)
+    - Workflow template link with ExternalLink icon (for no-code projects)
+    - Both can appear for hybrid projects
+    - Distinct styling for each button type
   - Estimated time to complete
   - Difficulty level badge
   - Related tags
@@ -287,6 +320,7 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
   - Uses `react-markdown` for rendering (NEVER `dangerouslySetInnerHTML`)
   - Markdown content stored in `body` field of project JSON
   - Comprehensive prose classes for proper formatting
+  - Tool color categorization function: `getToolColor(tool: string)`
 
 #### 8. **About Page** (`/about`)
 - **Status:** ✅ Complete
@@ -618,9 +652,12 @@ type ProjectItem = {
   slug: string;            // URL-safe identifier (e.g., "sentiment-classifier")
   title: string;
   level: 'beginner' | 'intermediate' | 'advanced';
+  projectType: 'code' | 'no-code' | 'hybrid';  // NEW: Project type classification
+  tools: string[];         // NEW: Required tools/technologies (e.g., ["Python", "scikit-learn"])
   durationHours?: number;  // Estimated completion time (2-8 hours typical)
   summary: string;         // Short description for cards
-  repoUrl?: string;        // GitHub link (Colgate-University-Ai-Club org)
+  repoUrl?: string;        // GitHub link (Colgate-University-Ai-Club org) - now optional
+  workflowUrl?: string;    // NEW: Link to workflow template (for no-code/hybrid projects)
   resources?: {
     label: string;         // e.g., "scikit-learn Documentation"
     url: string;
@@ -638,6 +675,8 @@ type ProjectItem = {
   "slug": "sentiment-classifier",
   "title": "Twitter Sentiment Analysis Classifier",
   "level": "beginner",
+  "projectType": "code",
+  "tools": ["Python", "scikit-learn", "Pandas", "Jupyter"],
   "durationHours": 4,
   "summary": "Build a machine learning model to classify tweets as positive, negative, or neutral using Python and scikit-learn.",
   "repoUrl": "https://github.com/Colgate-University-Ai-Club/sentiment-classifier",
@@ -656,11 +695,13 @@ type ProjectItem = {
 ```
 
 **Sample Projects (Current):**
-1. Twitter Sentiment Analysis Classifier (Beginner, 4 hours)
-2. Chatbot with RAG Pipeline (Intermediate, 6 hours)
-3. Computer Vision Object Detection (Intermediate, 8 hours)
-4. NLP Text Summarizer (Beginner, 3 hours)
-5. Deep Learning Image Generator (Advanced, 8 hours)
+1. Twitter Sentiment Analysis Classifier (Beginner, Code, 4 hours)
+2. Course-Specific RAG Chatbot (Intermediate, No-Code, 3 hours)
+3. Flour and Salt Restaurant Website (Beginner, No-Code, 2 hours)
+4. AI Email Manager Agent (Beginner, No-Code, 2 hours)
+5. AI Image Generation for Product Marketing (Intermediate, No-Code, 3 hours)
+6. AI-Powered Lead Generation System (Advanced, Hybrid, 8 hours)
+7. AI Research Insights Dashboard (Intermediate, Code, 5 hours)
 
 ---
 
@@ -776,11 +817,23 @@ All data models have corresponding TypeScript interfaces:
 
 ### 3. **Exploring Projects**
 1. User navigates to `/projects`
-2. User filters by tag (e.g., "computer-vision")
-3. User sees projects with difficulty levels
+2. User applies filters:
+   - Project type: "No-Code" (filters to no-code projects)
+   - Level: "Beginner" (further filters to beginner projects)
+   - URL updates to: `/projects?type=no-code&level=beginner`
+3. User sees filtered projects with:
+   - Project type badges (💻 Code, ⚡ No-Code, 🔀 Hybrid)
+   - Difficulty level badges
+   - Tools preview (max 4 visible)
+   - Duration and summary
 4. User clicks project → navigates to `/projects/[slug]`
-5. User reads project details, views resources
-6. User clicks "View Repository" → opens GitHub in new tab
+5. User sees comprehensive project details:
+   - Project type section with icon and description
+   - All required tools with color coding
+   - Prerequisites callout
+   - Full markdown guide
+   - Resources
+6. User clicks "View Repository" (code project) or "View Workflow Template" (no-code project) → opens in new tab
 
 ### 4. **Submitting a Resource**
 1. User navigates to `/contribute`
@@ -1006,6 +1059,127 @@ npm run sync-news    # Manually trigger news sync (requires dev server)
    - Verify Supabase project is active
 
 **See `CLAUDE.md` for complete troubleshooting guide.**
+
+---
+
+### Project Type System Architecture
+
+The projects section implements a comprehensive classification system to support three types of AI/ML learning projects:
+
+#### Project Types
+
+1. **Code Projects** (💻 Blue)
+   - Traditional programming projects requiring code
+   - Examples: Python ML classifiers, web apps, data pipelines
+   - Display GitHub repository links
+   - Tools: Programming languages, frameworks, libraries
+
+2. **No-Code Projects** (⚡ Purple)
+   - Visual automation and no-code tool projects
+   - Examples: n8n workflows, Make.com automations, Lovable websites
+   - Display workflow template links
+   - Tools: n8n, Make.com, Zapier, Airtable, Lovable
+
+3. **Hybrid Projects** (🔀 Green)
+   - Combination of coding and no-code tools
+   - Examples: Python backend + n8n automation, API + workflow orchestration
+   - Display both repository and workflow links
+   - Tools: Mix of programming languages and no-code platforms
+
+#### Data Model Changes
+
+**New Required Fields:**
+- `projectType: 'code' | 'no-code' | 'hybrid'` - Classification type
+- `tools: string[]` - Array of required tools/technologies
+
+**Modified Fields:**
+- `repoUrl?: string` - Now optional (not all projects need repos)
+- `workflowUrl?: string` - New optional field for workflow templates
+
+#### UI Components
+
+**ProjectCard Component** (`components/projects/ProjectCard.tsx`):
+- Project type badge with icon (Code/Zap/Layers from lucide-react)
+- Color-coded type badge matching project type colors
+- Tools display: Max 4 visible, "+X more" for overflow
+- Conditional link display:
+  - Shows GitHub icon if `repoUrl` exists
+  - Shows ExternalLink icon if `workflowUrl` exists (and no `repoUrl`)
+  - Both can appear for hybrid projects
+
+**Project Detail Page** (`app/projects/[slug]/page.tsx`):
+- **Project Type Section:**
+  - Large 2xl rounded border with type color
+  - Icon + label + description
+  - Prominent placement at top of page
+- **Tools & Technologies Section:**
+  - All tools displayed as colored badges
+  - Automatic categorization:
+    - Programming languages (python, javascript, etc.) → Blue
+    - No-code tools (n8n, make.com, etc.) → Purple
+    - AI APIs (openai, anthropic, etc.) → Green
+    - Databases (postgresql, pinecone, etc.) → Orange
+    - Default → Gray
+  - Hover effects with shadow
+- **Prerequisites Callout:**
+  - Blue-bordered box with info icon
+  - Auto-generates list from tools array
+  - Adds "key" for API tools, "account or installation" for others
+
+**Projects Listing Page** (`app/projects/page.tsx`):
+- **Dual Filter System:**
+  - Type filter: All / Code / No-Code / Hybrid
+  - Level filter: All / Beginner / Intermediate / Advanced
+  - Both filters work together via URL query parameters
+  - Each filter preserves the other's state
+  - "All" button for each dimension
+- **Filter URL Format:**
+  - Type only: `/projects?type=no-code`
+  - Level only: `/projects?level=beginner`
+  - Combined: `/projects?type=no-code&level=beginner`
+- **Empty State Handling:**
+  - Shows customized message based on active filters
+  - Example: "No no-code beginner projects found. Try adjusting your filters."
+
+#### Tool Color Categorization Function
+
+```typescript
+const getToolColor = (tool: string): string => {
+  const toolLower = tool.toLowerCase()
+
+  // Programming languages - blue
+  if (['python', 'javascript', 'typescript', 'java', 'c++', 'rust', 'go'].some(lang => toolLower.includes(lang))) {
+    return 'bg-blue-100 text-blue-800 border-blue-200'
+  }
+
+  // No-code tools - purple
+  if (['n8n', 'make.com', 'lovable', 'zapier', 'airtable'].some(tool => toolLower.includes(tool))) {
+    return 'bg-purple-100 text-purple-800 border-purple-200'
+  }
+
+  // AI APIs - green
+  if (['openai', 'anthropic', 'dalle', 'gpt', 'claude'].some(ai => toolLower.includes(ai.toLowerCase()))) {
+    return 'bg-green-100 text-green-800 border-green-200'
+  }
+
+  // Databases - orange
+  if (['postgresql', 'mysql', 'mongodb', 'pinecone', 'redis', 'supabase'].some(db => toolLower.includes(db))) {
+    return 'bg-orange-100 text-orange-800 border-orange-200'
+  }
+
+  // Default - gray
+  return 'bg-gray-100 text-gray-700 border-gray-200'
+}
+```
+
+#### Implementation Notes
+
+- **Type Safety:** TypeScript ensures `projectType` is one of three valid values
+- **Backward Compatibility:** Existing projects updated with new fields
+- **Filtering Logic:** Sequential filtering (type first, then level)
+- **URL State Management:** Filters preserved across navigation
+- **Icon Library:** lucide-react provides Code, Zap, Layers, ExternalLink icons
+- **Color Consistency:** Project type colors used throughout (cards, detail page, filters)
 
 ---
 

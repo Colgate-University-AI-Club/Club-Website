@@ -79,7 +79,7 @@ export interface GitHubRepoStats {
   isArchived: boolean;
 }
 
-export type ProjectItem={id:string;slug:string;title:string;level:'beginner'|'intermediate'|'advanced';durationHours?:number;summary:string;repoUrl?:string;resources?:{label:string;url:string}[];body?:string;githubStats?:GitHubRepoStats};
+export type ProjectItem={id:string;slug:string;title:string;level:'beginner'|'intermediate'|'advanced';projectType:'code'|'no-code'|'hybrid';tools:string[];durationHours?:number;summary:string;repoUrl?:string;workflowUrl?:string;resources?:{label:string;url:string}[];body?:string;githubStats?:GitHubRepoStats};
 export type NewsletterItem={id:number;title:string;content_markdown:string;publish_date:string;};
 
 // Supabase jobs table structure

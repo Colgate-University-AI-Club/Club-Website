@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     try {
       const fileContent = readFileSync(NEWS_FILE_PATH, 'utf-8')
       currentNews = JSON.parse(fileContent)
-    } catch (error) {
+    } catch {
       console.log('No existing news file found, creating new one')
       currentNews = []
     }
