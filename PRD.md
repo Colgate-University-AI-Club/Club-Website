@@ -248,25 +248,45 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 - **Status:** ✅ Complete
 - **Description:** Project catalog with filtering
 - **Features:**
-  - Tag-based filtering
-  - Difficulty level badges (beginner/intermediate/advanced)
-  - Duration indicators
+  - Level-based filtering (beginner/intermediate/advanced)
+  - Filter buttons using Next.js Link components for URL-based navigation
+  - "All" filter to clear active filters
+  - Difficulty level badges with color coding
+  - Duration indicators (estimated hours)
   - Project summaries
+  - GitHub repository integration (displays repo stats when available)
+  - Graceful handling of non-existent repositories
   - Links to individual project pages
 - **Files:** `app/projects/page.tsx`, `components/projects/ProjectCard.tsx`
 - **Data Source:** `app/data/projects.json`
+- **Technical Notes:**
+  - Filter buttons MUST be `<Link>` components, not static `<button>` elements
+  - Query parameter format: `?level=beginner`
+  - GitHub stats fetched via `/api/github/repo-info` endpoint
 
 #### 7. **Project Detail Page** (`/projects/[slug]`)
 - **Status:** ✅ Complete
-- **Description:** Individual project view
+- **Description:** Individual project view with comprehensive markdown guides
 - **Features:**
-  - Full project description (markdown body)
-  - Resource links (tutorials, docs, repos)
-  - GitHub repository link
+  - Full project description (markdown body rendered with ReactMarkdown)
+  - Comprehensive markdown content (2000+ words):
+    - Project overview
+    - Learning objectives
+    - Prerequisites
+    - Step-by-step implementation guide
+    - Code examples and snippets
+    - Expected outcomes
+  - Resource links (tutorials, docs, datasets, tools)
+  - GitHub repository link with stats
   - Estimated time to complete
-  - Difficulty level
+  - Difficulty level badge
   - Related tags
+  - Tailwind prose classes for markdown styling
 - **File:** `app/projects/[slug]/page.tsx`
+- **Technical Notes:**
+  - Uses `react-markdown` for rendering (NEVER `dangerouslySetInnerHTML`)
+  - Markdown content stored in `body` field of project JSON
+  - Comprehensive prose classes for proper formatting
 
 #### 8. **About Page** (`/about`)
 - **Status:** ✅ Complete
@@ -386,6 +406,26 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
   - Client-side cache with manual refresh
   - Optimistic updates
 - **File:** `app/jobs/page.tsx`, `lib/jobUtils.ts`
+
+#### 17. **GitHub Repository Integration**
+- **Status:** ✅ Complete
+- **Description:** Display GitHub repository stats for projects
+- **Features:**
+  - Fetches repository statistics (stars, forks, last updated)
+  - API endpoint: `/api/github/repo-info?url=[repo-url]`
+  - Graceful error handling for non-existent repositories
+  - Displays repo stats on project cards when available
+  - Links to GitHub repositories from project detail pages
+- **Files:**
+  - `app/api/github/route.ts` (or similar API route)
+  - `components/projects/ProjectCard.tsx`
+  - `lib/github.ts` (GitHub API utilities)
+- **Data Source:** GitHub REST API
+- **Technical Notes:**
+  - All project repositories should be in the `Colgate-University-Ai-Club` organization
+  - Repositories MUST be created manually (no automatic creation)
+  - 404 errors are caught and handled silently
+  - No authentication required for public repository stats
 
 ---
 
@@ -575,19 +615,52 @@ type EventItem = {
 ```typescript
 type ProjectItem = {
   id: string;
-  slug: string;            // URL-safe identifier
+  slug: string;            // URL-safe identifier (e.g., "sentiment-classifier")
   title: string;
   level: 'beginner' | 'intermediate' | 'advanced';
-  durationHours?: number;  // Estimated completion time
-  summary: string;         // Short description
-  repoUrl?: string;        // GitHub link
+  durationHours?: number;  // Estimated completion time (2-8 hours typical)
+  summary: string;         // Short description for cards
+  repoUrl?: string;        // GitHub link (Colgate-University-Ai-Club org)
   resources?: {
-    label: string;
+    label: string;         // e.g., "scikit-learn Documentation"
     url: string;
-  }[];
-  body?: string;           // Full markdown content
+  }[];                     // 4-5 helpful links per project
+  body?: string;           // Full markdown content (2000+ words)
+                          // Includes: overview, learning objectives,
+                          // prerequisites, step-by-step guide, code examples
 }
 ```
+
+**Example Project:**
+```json
+{
+  "id": "p1",
+  "slug": "sentiment-classifier",
+  "title": "Twitter Sentiment Analysis Classifier",
+  "level": "beginner",
+  "durationHours": 4,
+  "summary": "Build a machine learning model to classify tweets as positive, negative, or neutral using Python and scikit-learn.",
+  "repoUrl": "https://github.com/Colgate-University-Ai-Club/sentiment-classifier",
+  "resources": [
+    {
+      "label": "Google Colab",
+      "url": "https://colab.research.google.com"
+    },
+    {
+      "label": "scikit-learn Documentation",
+      "url": "https://scikit-learn.org/stable/"
+    }
+  ],
+  "body": "## Project Overview\n\nBuild your first machine learning classifier..."
+}
+```
+
+**Sample Projects (Current):**
+1. Twitter Sentiment Analysis Classifier (Beginner, 4 hours)
+2. Chatbot with RAG Pipeline (Intermediate, 6 hours)
+3. Computer Vision Object Detection (Intermediate, 8 hours)
+4. NLP Text Summarizer (Beginner, 3 hours)
+5. Deep Learning Image Generator (Advanced, 8 hours)
 
 ---
 
@@ -1156,6 +1229,43 @@ transition-all duration-200 hover:-translate-y-1 hover:shadow-lg
 - Indeed API
 - GitHub Jobs
 - Custom scraper (legal/ethical scraping only)
+
+---
+
+#### GitHub Repository Stats Integration
+
+**API Endpoint:** `/api/github/repo-info?url=[repository-url]`
+
+**Purpose:** Fetch and display GitHub repository statistics for projects
+
+**Implementation:**
+- Accepts GitHub repository URL as query parameter
+- Extracts owner and repo name from URL
+- Calls GitHub REST API: `GET /repos/{owner}/{repo}`
+- Returns: stars, forks, last updated timestamp
+- No authentication required (public repos only)
+
+**Error Handling:**
+- 404 responses (non-existent repos): Return empty/null stats, fail silently
+- Rate limiting: GitHub allows 60 requests/hour for unauthenticated calls
+- Network errors: Caught and handled gracefully in UI
+
+**Important Notes:**
+- **Manual Repository Creation Required**: GitHub repositories cannot be automatically created via the website for security reasons:
+  1. Would require storing GitHub Personal Access Token with write permissions (security risk)
+  2. Repositories need manual curation (README, starter code, description, license, etc.)
+  3. This is a read-only display layer, not a repository management system
+- **Workflow:**
+  1. Club admin manually creates repository in Colgate-University-Ai-Club organization
+  2. Club admin adds project entry to `projects.json` with correct `repoUrl`
+  3. Website automatically fetches and displays repo stats
+- **Graceful Degradation**: If repository doesn't exist yet, project card still displays correctly without GitHub stats
+
+**Potential Future Enhancement:**
+Could build a separate admin script/tool to create template repositories using GitHub API with stored credentials, but this would be:
+- Run manually/on-demand (not automatic)
+- Kept separate from public website
+- Secured with proper credential management (environment variables, not in codebase)
 
 ---
 

@@ -3,16 +3,22 @@ import { NewsItem, EventItem, ProjectItem } from '@/lib/types'
 import { formatDate, isUpcoming } from '@/lib/date'
 import { Newspaper, Calendar, Rocket } from 'lucide-react'
 import newsData from '@/app/data/news.json'
-import eventsData from '@/app/data/events.json'
+import eventsDataRaw from '@/app/data/events.json'
 import projectsData from '@/app/data/projects.json'
 import NewsletterSignup from '@/components/NewsletterSignup'
+
+// Handle both old format (array) and new format (object with events array)
+type EventsData = EventItem[] | { lastSyncedAt?: string; events: EventItem[] }
 
 export default function Home() {
   const news = (newsData as NewsItem[])
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
     .slice(0, 3)
 
-  const upcomingEvents = (eventsData as EventItem[])
+  const eventsData = eventsDataRaw as EventsData
+  const events = Array.isArray(eventsData) ? eventsData : eventsData.events
+
+  const upcomingEvents = events
     .filter(event => isUpcoming(event.startsAt))
     .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
     .slice(0, 3)
@@ -108,7 +114,7 @@ export default function Home() {
         {news.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
             {news.map((item) => (
-              <article key={item.id} className="group rounded-xl border border-border bg-card hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
+              <article key={item.id} className="group relative rounded-xl border border-border bg-card hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <div className="p-6">
                   <div className="flex items-center space-x-2 mb-3">
                     <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${

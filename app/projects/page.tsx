@@ -1,4 +1,5 @@
 import { Suspense } from 'react'
+import Link from 'next/link'
 import { ProjectItem } from '@/lib/types'
 import { paginateArray } from '@/lib/paginate'
 import ProjectCard from '@/components/projects/ProjectCard'
@@ -39,9 +40,20 @@ async function ProjectsContent({ searchParams }: ProjectsPageProps) {
         <div className="mb-6">
           <h2 className="text-sm font-medium text-gray-700 mb-3">Filter by level:</h2>
           <div className="flex flex-wrap gap-2">
+            <Link
+              href="/projects"
+              className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
+                !level
+                  ? 'bg-red-100 text-red-800 hover:bg-red-200'
+                  : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+              }`}
+            >
+              All
+            </Link>
             {allLevels.map((levelName) => (
-              <button
+              <Link
                 key={levelName}
+                href={`/projects?level=${levelName}`}
                 className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium capitalize transition-colors ${
                   level === levelName
                     ? 'bg-red-100 text-red-800 hover:bg-red-200'
@@ -49,7 +61,7 @@ async function ProjectsContent({ searchParams }: ProjectsPageProps) {
                 }`}
               >
                 {levelName}
-              </button>
+              </Link>
             ))}
           </div>
         </div>

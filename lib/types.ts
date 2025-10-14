@@ -43,8 +43,43 @@ export interface JobData {
   postedAt?: string; // for compatibility with existing sorting
 }
 
-export type EventItem={id:string;title:string;startsAt:string;endsAt?:string;location?:string;description?:string;rsvpUrl?:string};
-export type ProjectItem={id:string;slug:string;title:string;level:'beginner'|'intermediate'|'advanced';durationHours?:number;summary:string;repoUrl?:string;resources?:{label:string;url:string}[];body?:string};
+export type EventItem={id:string;title:string;startsAt:string;endsAt?:string;location?:string;description?:string;rsvpUrl?:string;calendarEventId?:string};
+
+// Google Calendar API types
+export interface GoogleCalendarEvent {
+  id: string;
+  summary: string;
+  description?: string;
+  location?: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  end: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  htmlLink?: string;
+}
+
+export interface GoogleCalendarResponse {
+  items: GoogleCalendarEvent[];
+  nextPageToken?: string;
+}
+
+// GitHub repository statistics interface
+export interface GitHubRepoStats {
+  stars: number;
+  forks: number;
+  lastUpdated: string;
+  contributors: number;
+  language: string | null;
+  isArchived: boolean;
+}
+
+export type ProjectItem={id:string;slug:string;title:string;level:'beginner'|'intermediate'|'advanced';durationHours?:number;summary:string;repoUrl?:string;resources?:{label:string;url:string}[];body?:string;githubStats?:GitHubRepoStats};
 export type NewsletterItem={id:number;title:string;content_markdown:string;publish_date:string;};
 
 // Supabase jobs table structure

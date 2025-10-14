@@ -1,11 +1,17 @@
 import { EventItem } from '@/lib/types'
 import { isUpcoming } from '@/lib/date'
 import EventCard from '@/components/events/EventCard'
-import eventsData from '@/app/data/events.json'
+import eventsDataRaw from '@/app/data/events.json'
 import { Calendar } from 'lucide-react'
+import EventSyncStatus from '@/components/events/EventSyncStatus'
+
+// Handle both old format (array) and new format (object with events array)
+type EventsData = EventItem[] | { lastSyncedAt?: string; events: EventItem[] }
 
 export default function EventsPage() {
-  const events = eventsData as EventItem[]
+  const eventsData = eventsDataRaw as EventsData
+  const events = Array.isArray(eventsData) ? eventsData : eventsData.events
+  const lastSyncedAt = Array.isArray(eventsData) ? undefined : eventsData.lastSyncedAt
 
   const upcomingEvents = events
     .filter(event => isUpcoming(event.startsAt))
@@ -50,6 +56,7 @@ export default function EventsPage() {
             frameBorder="0"
             scrolling="no"
           ></iframe>
+          <EventSyncStatus lastSyncedAt={lastSyncedAt} />
         </div>
       </div>
 

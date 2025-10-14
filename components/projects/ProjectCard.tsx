@@ -1,8 +1,19 @@
+'use client'
+
 import { ProjectItem } from '@/lib/types'
 import Link from 'next/link'
+import { useState, useEffect } from 'react'
+import { Star, GitFork, Clock } from 'lucide-react'
+import { parseGitHubUrl } from '@/lib/github'
 
 interface ProjectCardProps {
   item: ProjectItem
+}
+
+interface GitHubStats {
+  stars: number
+  forks: number
+  lastUpdated: string
 }
 
 const levelColors = {
@@ -11,7 +22,73 @@ const levelColors = {
   advanced: 'bg-red-100 text-red-800',
 }
 
+/**
+ * Format relative time from ISO date string
+ * @param isoDate ISO 8601 date string
+ * @returns Relative time string like "2 days ago"
+ */
+function formatRelativeTime(isoDate: string): string {
+  const date = new Date(isoDate)
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffSeconds = Math.floor(diffMs / 1000)
+  const diffMinutes = Math.floor(diffSeconds / 60)
+  const diffHours = Math.floor(diffMinutes / 60)
+  const diffDays = Math.floor(diffHours / 24)
+  const diffWeeks = Math.floor(diffDays / 7)
+  const diffMonths = Math.floor(diffDays / 30)
+  const diffYears = Math.floor(diffDays / 365)
+
+  if (diffYears > 0) return `${diffYears} year${diffYears > 1 ? 's' : ''} ago`
+  if (diffMonths > 0) return `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`
+  if (diffWeeks > 0) return `${diffWeeks} week${diffWeeks > 1 ? 's' : ''} ago`
+  if (diffDays > 0) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`
+  if (diffHours > 0) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`
+  if (diffMinutes > 0) return `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`
+  return 'just now'
+}
+
 export default function ProjectCard({ item }: ProjectCardProps) {
+  const [stats, setStats] = useState<GitHubStats | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    // Only fetch if repoUrl exists
+    if (!item.repoUrl) {
+      return
+    }
+
+    // Parse the GitHub URL to extract owner/repo
+    const parsed = parseGitHubUrl(item.repoUrl)
+    if (!parsed) {
+      // Invalid URL, don't fetch
+      return
+    }
+
+    const { owner, repo } = parsed
+
+    // Fetch GitHub stats from API
+    setLoading(true)
+    fetch(`/api/github/${owner}/${repo}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.data) {
+          setStats({
+            stars: data.data.stars,
+            forks: data.data.forks,
+            lastUpdated: data.data.lastUpdated,
+          })
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to fetch GitHub stats:', error)
+        // Silently fail - don't show error to user
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }, [item.repoUrl])
+
   return (
     <article className="bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-3">
@@ -33,6 +110,24 @@ export default function ProjectCard({ item }: ProjectCardProps) {
           {item.title}
         </Link>
       </h3>
+
+      {/* GitHub Stats - Display below title if available */}
+      {stats && !loading && (
+        <div className="flex items-center gap-3 mb-3 text-xs text-gray-500">
+          <span className="flex items-center gap-1">
+            <Star className="h-3 w-3" />
+            {stats.stars}
+          </span>
+          <span className="flex items-center gap-1">
+            <GitFork className="h-3 w-3" />
+            {stats.forks}
+          </span>
+          <span className="flex items-center gap-1">
+            <Clock className="h-3 w-3" />
+            {formatRelativeTime(stats.lastUpdated)}
+          </span>
+        </div>
+      )}
 
       <p className="text-gray-600 mb-4 line-clamp-3">{item.summary}</p>
 

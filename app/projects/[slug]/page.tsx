@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import ReactMarkdown from 'react-markdown'
 import { ProjectItem } from '@/lib/types'
 import projectsData from '@/app/data/projects.json'
 
@@ -13,10 +14,6 @@ const levelColors = {
   beginner: 'bg-green-100 text-green-800',
   intermediate: 'bg-yellow-100 text-yellow-800',
   advanced: 'bg-red-100 text-red-800',
-}
-
-function createMarkup(htmlContent: string) {
-  return { __html: htmlContent }
 }
 
 export default async function ProjectDetailPage({ params }: ProjectDetailPageProps) {
@@ -101,10 +98,9 @@ export default async function ProjectDetailPage({ params }: ProjectDetailPagePro
       {project.body && (
         <section className="mb-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Project Details</h2>
-          <div
-            className="prose prose-gray max-w-none"
-            dangerouslySetInnerHTML={createMarkup(project.body)}
-          />
+          <div className="prose prose-gray max-w-none prose-headings:font-bold prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4 prose-h3:text-xl prose-h3:mt-6 prose-h3:mb-3 prose-p:mb-4 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-4 prose-pre:rounded-lg prose-pre:overflow-x-auto prose-ul:list-disc prose-ul:ml-6 prose-ol:list-decimal prose-ol:ml-6 prose-li:mb-2">
+            <ReactMarkdown>{project.body}</ReactMarkdown>
+          </div>
         </section>
       )}
     </div>

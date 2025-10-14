@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Merriweather, Inter } from "next/font/google";
 import "./globals.css";
 import NavBar from "@/components/site/NavBar";
@@ -19,10 +19,13 @@ const inter = Inter({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#7B2142",
+};
+
 export const metadata: Metadata = {
   title: "Colgate AI Club",
   description: "Exploring artificial intelligence and machine learning at Colgate University",
-  themeColor: "#7B2142",
   openGraph: {
     title: "Colgate AI Club",
     description: "Exploring artificial intelligence and machine learning at Colgate University",
@@ -41,9 +44,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <meta name="theme-color" content="currentcolor" />
-      </head>
       <body
         className={`${merriweather.variable} ${inter.variable} font-body antialiased min-h-screen flex flex-col`}
       >
