@@ -1,4 +1,6 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Colgate University AI Club Website
+
+Colgate University AI Club's official website built with Next.js 15, TypeScript, and Tailwind CSS.
 
 ## Getting Started
 
@@ -19,6 +21,23 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Features
+
+- **News**: Browse AI-related news with tag filtering and pagination
+- **Jobs**: Explore AI job opportunities with advanced filtering
+- **Events**: View upcoming AI club events with Google Calendar integration
+- **Projects**: Showcase club projects with detailed project pages
+- **Contribute**: Submit resources to be added to the website
+
+## Architecture
+
+This is a data-driven Next.js application with:
+- JSON-based content management (no database required)
+- Server-side rendering and static generation
+- Component-based architecture with shadcn/ui
+- Responsive design optimized for all devices
+- API routes for content submission
 
 ## Learn More
 
