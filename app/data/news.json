@@ -1,0 +1,72 @@
+[
+  {
+    "id": "c58da2a4-00b7-43b2-9b97-6fed3a410be6",
+    "title": "AI Finds its Niche: Writing Corporate Press Releases - Gizmodo",
+    "summary": "AI tools now draft about 25% of corporate press releases",
+    "content": "# AI Finds its Niche: Writing Corporate Press Releases",
+    "sourceType": "external",
+    "url": "https://gizmodo.com/ai-finds-its-niche-writing-corporate-press-releases-2000666360",
+    "tags": [
+      "ai"
+    ],
+    "publishedAt": "2025-10-02T15:00:39.000Z"
+  },
+  {
+    "id": "99767973-d807-4f94-ba67-770398613c3e",
+    "title": "Taming AI agents: The autonomous workforce of 2026 - cio.com",
+    "summary": "By 2026, autonomous AI agents will manage tasks by controlling tools, not themselves, enabling efficient, microservice-like collaboration across teams for enhanced productivity and security.",
+    "content": "It can answer questions like \"What's the AI agent team's top priority?\" It delegates, for instance, a Jira agent to pull tickets or statistics or a call analytics agent to examine customer pain points, or a translation agent to process foreign-language feedback. This structure of an AI agent is very similar to the micro-service architecture in traditional software design — most principles from micro services can be applied to the agentic architecture. Another way to guarantee success in creating your AI agent fleet: Forget controlling the agents themselves; control their tools instead. So actual agentic AI security isn't about the LLMs, it's about the tools. By early 2026, AI agents will write their own tools.",
+    "sourceType": "external",
+    "url": "https://www.cio.com/article/4064998/taming-ai-agents-the-autonomous-workforce-of-2026.html",
+    "tags": [
+      "ai",
+      "llm",
+      "autonomous"
+    ],
+    "publishedAt": "2025-09-30T15:55:52.000Z"
+  },
+  {
+    "id": "00a87303-8cb3-4ff1-a2d7-e6cee5527593",
+    "title": "California Gov. Gavin Newsom Signs Bill Creating AI Safety Measures - SecurityWeek",
+    "summary": "California enacts pioneering AI safety law balancing regulation with industry growth, aiming to secure large-scale AI models without hindering innovation.",
+    "content": "The new law will establish some of the first-in-the-nation regulations on large-scale AI models without hurting the state's homegrown industry, Newsom said. For more than 15 years, Mike Lennon has been closely monitoring the threat landscape and analyzing trends in the National Security and enterprise cybersecurity space. * Cato Networks Acquires AI Security Firm Aim Security * Cyera Raises $540 Million to Expand AI-Powered Data Security Platform See real-world examples of how attackers engage with LLMs. This session is for anyone securing, testing, or building AI systems, especially those using LLMs. Building secure AI agent systems requires a disciplined engineering approach focused on deliberate architecture and human oversight.",
+    "sourceType": "external",
+    "url": "https://www.securityweek.com/california-gov-gavin-newsom-signs-bill-creating-ai-safety-measures/",
+    "tags": [
+      "ai",
+      "llm",
+      "cybersecurity",
+      "regulation"
+    ],
+    "publishedAt": "2025-09-30T11:53:02.000Z"
+  },
+  {
+    "id": "75f8881f-81f5-4af1-92eb-b63480a054dd",
+    "title": "Lootlock Empowers Parents to Control Kids' Gaming Expenses - Startup Ecosystem Canada",
+    "summary": "Lootlock helps parents manage kids' gaming expenses by providing control tools, promoting responsible spending in digital gaming environments.",
+    "content": "* Canada startup news acquisition AI AI development AI infrastructure AI innovation AI integration AI investment AI models AI technology Anthropic Apple Artificial Intelligence Autonomous vehicles Canada founder news Canada startup news cryptocurrency Cybersecurity DeepSeek Electric Vehicles Elon Musk entrepreneurship fintech Funding round Generative AI Global founder news Global startup news healthcare innovation Innovation investment IPO Meta Microsoft Nvidia Ontario founder news Ontario startup news OpenAI Sam Altman Seed funding Series A funding Startup growth TechCrunch Disrupt Tech innovation Tesla Toronto startup news venture capital 2 months ago Global Anthropic Challenges OpenAI with $1 AI Model Offer to U.S. Government 7 months ago Global Hyundai and Avride Collaborate to Develop Robotaxi Technology 7 months ago Global OpenAI Launches GPT-4.5 with Enhanced Features",
+    "sourceType": "external",
+    "url": "https://www.startupecosystem.ca/news/lootlock-empowers-parents-to-control-kids-gaming-expenses/",
+    "tags": [
+      "ai",
+      "artificial intelligence",
+      "gpt",
+      "openai",
+      "anthropic"
+    ],
+    "publishedAt": "2025-09-28T19:14:33.000Z"
+  },
+  {
+    "id": "d39690bd-f04c-4ea1-834d-68ff4b34ccbe",
+    "title": "Harvard's BKC Explores Whether Human Intelligence And AI Computational Intelligence Are Actually The Same - Forbes",
+    "summary": "Harvard's BKC examines whether human intelligence and AI computational intelligence are fundamentally the same, advancing insights into the human mind and the pursuit of artificial super intelligence.",
+    "content": "# Harvard's BKC Explores Whether Human Intelligence And AI Computational Intelligence Are Actually The Same Some fervently assert that we have already figured out how to get AI to be on par with human intelligence, as evidenced by modern-era LLMs, generative AI, and computational transformers. In any case, the topic has immense value as a means of furthering our understanding of the human mind and, likewise, spurs our efforts to push AI computational intelligence toward artificial general intelligence and ultimately arrive at artificial super intelligence or ASI. That would be especially the case if you adopt the premise that the human brain is ingrained in computational intelligence.",
+    "sourceType": "external",
+    "url": "https://www.forbes.com/sites/lanceeliot/2025/09/28/harvards-bkc-explores-whether-human-intelligence-and-ai-computational-intelligence-are-actually-the-same/",
+    "tags": [
+      "ai",
+      "llm"
+    ],
+    "publishedAt": "2025-09-28T07:15:00.000Z"
+  }
+]

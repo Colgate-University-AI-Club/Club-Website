@@ -1,0 +1,21 @@
+<svg width="120" height="32" viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- TODO: Replace with official Colgate AI Club logo once approved -->
+  <defs>
+    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#7B2142;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9B3358;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Shield/crest shape -->
+  <path d="M8 4C8 4 12 2 20 2C28 2 32 4 32 4V18C32 25 20 30 20 30S8 25 8 18V4Z"
+        fill="url(#gradient)" stroke="none"/>
+
+  <!-- Inner design elements -->
+  <circle cx="20" cy="12" r="3" fill="white" opacity="0.9"/>
+  <path d="M17 16L20 18L23 16" stroke="white" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Text -->
+  <text x="42" y="12" font-family="serif" font-size="9" font-weight="700" fill="#7B2142">COLGATE</text>
+  <text x="42" y="22" font-family="sans-serif" font-size="7" font-weight="400" fill="#666">AI CLUB</text>
+</svg>

@@ -1,0 +1,218 @@
+[
+  {
+    "jobKey": "sample-job-1",
+    "title": "Machine Learning Engineer",
+    "companyName": "Tech Corp",
+    "jobType": ["Full-time"],
+    "descriptionText": "## About the Role\n\nWe are looking for a passionate Machine Learning Engineer to join our team. You will work on cutting-edge AI projects and help shape the future of technology.\n\n### Responsibilities\n- Design and implement ML models\n- Collaborate with cross-functional teams\n- Optimize model performance\n\n### What You'll Do\n- Build scalable ML pipelines\n- Work with large datasets\n- Deploy models to production",
+    "companyUrl": "https://techcorp.example.com",
+    "location": {
+      "city": "New York",
+      "postalCode": "10001",
+      "country": "United States",
+      "countryCode": "US",
+      "formattedAddressLong": "New York, NY 10001, United States",
+      "formattedAddressShort": "New York, NY",
+      "latitude": 40.7589,
+      "longitude": -73.9851,
+      "streetAddress": "123 Tech Street",
+      "fullAddress": "123 Tech Street, New York, NY 10001, United States"
+    },
+    "salary": {
+      "salaryCurrency": "USD",
+      "salaryMax": 180000,
+      "salaryMin": 150000,
+      "salarySource": "employer",
+      "salaryText": "$150,000 - $180,000 a year",
+      "salaryType": "yearly"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Flexible PTO",
+      "Work from home"
+    ],
+    "attributes": [
+      "Python",
+      "TensorFlow",
+      "PyTorch",
+      "AWS",
+      "Docker",
+      "Kubernetes",
+      "SQL",
+      "Git"
+    ],
+    "jobUrl": "https://techcorp.example.com/jobs/ml-engineer",
+    "applyUrl": "https://techcorp.example.com/jobs/ml-engineer/apply",
+    "requirements": [
+      {
+        "label": "Bachelor's degree in Computer Science, Machine Learning, or related field",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "3+ years of experience in machine learning",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Experience with Python and ML frameworks",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Experience with cloud platforms (AWS, GCP, Azure)",
+        "requirementSeverity": "PREFERRED"
+      },
+      {
+        "label": "PhD in Machine Learning or related field",
+        "requirementSeverity": "PREFERRED"
+      }
+    ],
+    "jobCardSummary": "Join our innovative team as a Machine Learning Engineer! Work on cutting-edge AI projects, build scalable ML pipelines, and help shape the future of technology in a fast-paced environment.",
+    "postedAt": "2024-12-15T10:00:00Z"
+  },
+  {
+    "jobKey": "sample-job-2",
+    "title": "Data Scientist Intern",
+    "companyName": "StartupAI",
+    "jobType": ["Internship"],
+    "descriptionText": "## Summer Internship Opportunity\n\nLooking for a motivated Data Science student to join our summer internship program. This is a great opportunity to gain hands-on experience with real-world data science projects.\n\n### What You'll Learn\n- Data analysis and visualization\n- Statistical modeling\n- Machine learning fundamentals\n- Business intelligence\n\n### Program Highlights\n- Mentorship from senior data scientists\n- Real project experience\n- Networking opportunities\n- Potential for full-time offer",
+    "companyUrl": "https://startupai.example.com",
+    "location": {
+      "city": "San Francisco",
+      "postalCode": "94105",
+      "country": "United States",
+      "countryCode": "US",
+      "formattedAddressLong": "San Francisco, CA 94105, United States",
+      "formattedAddressShort": "San Francisco, CA",
+      "latitude": 37.7749,
+      "longitude": -122.4194,
+      "streetAddress": "456 Innovation Ave",
+      "fullAddress": "456 Innovation Ave, San Francisco, CA 94105, United States"
+    },
+    "salary": {
+      "salaryCurrency": "USD",
+      "salaryMax": 8000,
+      "salaryMin": 6000,
+      "salarySource": "employer",
+      "salaryText": "$6,000 - $8,000 a month",
+      "salaryType": "monthly"
+    },
+    "benefits": [
+      "Health insurance",
+      "Commuter benefits",
+      "Learning stipend",
+      "Mentorship program"
+    ],
+    "attributes": [
+      "Python",
+      "R",
+      "SQL",
+      "Tableau",
+      "Excel",
+      "Statistics",
+      "Pandas",
+      "NumPy"
+    ],
+    "jobUrl": "https://startupai.example.com/jobs/data-scientist-intern",
+    "applyUrl": "https://startupai.example.com/jobs/data-scientist-intern/apply",
+    "requirements": [
+      {
+        "label": "Currently pursuing a degree in Data Science, Statistics, or related field",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Basic knowledge of Python or R",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Strong analytical and problem-solving skills",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Experience with data visualization tools",
+        "requirementSeverity": "PREFERRED"
+      },
+      {
+        "label": "Previous internship experience",
+        "requirementSeverity": "PREFERRED"
+      }
+    ],
+    "jobCardSummary": "Exciting summer internship for Data Science students! Gain hands-on experience with real projects, work with senior data scientists, and build your career in AI.",
+    "postedAt": "2024-12-10T14:30:00Z"
+  },
+  {
+    "jobKey": "sample-job-3",
+    "title": "AI Research Scientist",
+    "companyName": "Research Labs Inc",
+    "jobType": ["Full-time"],
+    "descriptionText": "## Join Our Research Team\n\nWe are seeking a talented AI Research Scientist to join our world-class research team. You will work on breakthrough AI technologies and publish your findings in top-tier conferences.\n\n### Research Areas\n- Computer Vision\n- Natural Language Processing\n- Reinforcement Learning\n- Generative AI\n\n### Responsibilities\n- Conduct cutting-edge AI research\n- Publish research papers\n- Collaborate with academia\n- Mentor junior researchers\n\n### Environment\n- State-of-the-art computing resources\n- Access to large datasets\n- Conference travel budget\n- Academic collaboration opportunities",
+    "companyUrl": "https://researchlabs.example.com",
+    "location": {
+      "city": "Remote",
+      "postalCode": null,
+      "country": "United States",
+      "countryCode": "US",
+      "formattedAddressLong": "Remote, United States",
+      "formattedAddressShort": "Remote, US",
+      "latitude": 39.8283,
+      "longitude": -98.5795,
+      "streetAddress": null,
+      "fullAddress": "Remote, United States"
+    },
+    "salary": {
+      "salaryCurrency": "USD",
+      "salaryMax": 250000,
+      "salaryMin": 200000,
+      "salarySource": "employer",
+      "salaryText": "$200,000 - $250,000 a year",
+      "salaryType": "yearly"
+    },
+    "benefits": [
+      "Health insurance",
+      "Dental insurance",
+      "Vision insurance",
+      "401(k) matching",
+      "Conference travel budget",
+      "Research publication bonus",
+      "Flexible schedule",
+      "Work from anywhere"
+    ],
+    "attributes": [
+      "Deep Learning",
+      "Computer Vision",
+      "NLP",
+      "PyTorch",
+      "TensorFlow",
+      "CUDA",
+      "Research",
+      "Publications"
+    ],
+    "jobUrl": "https://researchlabs.example.com/jobs/ai-research-scientist",
+    "applyUrl": "https://researchlabs.example.com/jobs/ai-research-scientist/apply",
+    "requirements": [
+      {
+        "label": "PhD in Computer Science, Machine Learning, or related field",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "5+ years of AI research experience",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Strong publication record in top-tier venues",
+        "requirementSeverity": "REQUIRED"
+      },
+      {
+        "label": "Experience with large-scale distributed systems",
+        "requirementSeverity": "PREFERRED"
+      },
+      {
+        "label": "Industry research experience",
+        "requirementSeverity": "PREFERRED"
+      }
+    ],
+    "jobCardSummary": "Lead cutting-edge AI research at a world-class research lab. Work on breakthrough technologies, publish in top conferences, and collaborate with the best minds in AI.",
+    "postedAt": "2024-12-08T09:15:00Z"
+  }
+]
