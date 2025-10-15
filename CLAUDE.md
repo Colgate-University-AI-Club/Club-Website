@@ -220,7 +220,17 @@ The `/projects` page implements dual filtering (type + level):
 Project detail pages (`/projects/[slug]`) render markdown content using `react-markdown`:
 - Import: `import ReactMarkdown from 'react-markdown'`
 - Component: `<ReactMarkdown>{project.body}</ReactMarkdown>`
-- Styling: Comprehensive Tailwind prose classes for proper formatting
+- **Content Format**: MUST be Markdown, NOT HTML
+  - All projects in `projects.json` must have `body` field in Markdown format
+  - HTML tags (like `<h2>`, `<p>`, `<ul>`) will display as plain text
+  - Use Markdown syntax: `## Heading`, `- List item`, etc.
+- **Enhanced Styling** (line 222 of `app/projects/[slug]/page.tsx`):
+  - Larger base font size (`prose-lg`)
+  - H2 headings in Colgate maroon (`text-red-800`) with bottom border accents
+  - Increased spacing for clear visual hierarchy (mt-12 for H2, mt-8 for H3)
+  - Relaxed line heights for better readability
+  - Enhanced list spacing and indentation
+  - Well-styled inline code and code blocks
 - **NEVER use `dangerouslySetInnerHTML`** for markdown content
 
 ### GitHub Integration
@@ -269,6 +279,66 @@ The codebase includes 7 comprehensive sample projects:
 7. **AI Research Insights Dashboard** (Intermediate, Code, 5 hours)
 
 Each sample includes realistic markdown guides with code examples, learning objectives, and step-by-step instructions.
+
+## Google Calendar Event Sync
+
+### Overview
+The events page integrates with Google Calendar to automatically sync events from a shared calendar into `app/data/events.json`.
+
+### Sync Endpoint
+**URL:** `/api/events/sync` (POST)
+
+**Features:**
+- Fetches events from Google Calendar API v3
+- Syncs upcoming events (timeMin = current date)
+- Preserves manual events (events without `calendarEventId`)
+- Updates existing calendar events
+- Adds new calendar events
+- Removes deleted calendar events
+- Rate limiting: 1 minute cooldown between syncs (except Vercel Cron)
+
+**Configuration:**
+Required environment variables in `.env.local`:
+```bash
+GOOGLE_CALENDAR_API_KEY=your_google_calendar_api_key
+GOOGLE_CALENDAR_ID=your_calendar_id@group.calendar.google.com
+```
+
+**Manual Sync:**
+```bash
+curl -X POST "http://127.0.0.1:3000/api/events/sync"
+```
+
+**Files:**
+- `app/api/events/sync/route.ts` - Sync endpoint
+- `lib/calendar.ts` - Google Calendar API utilities
+- `components/events/EventSyncStatus.tsx` - Displays last sync time
+- `app/data/events.json` - Event data (hybrid: manual + synced)
+
+**Data Structure:**
+```json
+{
+  "lastSyncedAt": "2025-10-15T00:11:05.127Z",
+  "events": [
+    {
+      "id": "uuid-here",
+      "title": "Event Title",
+      "startsAt": "2025-10-30T19:00:00-04:00",
+      "endsAt": "2025-10-30T20:00:00-04:00",
+      "location": "Room Name",
+      "description": "Event description",
+      "rsvpUrl": "https://forms.gle/...",
+      "calendarEventId": "google-calendar-event-id"
+    }
+  ]
+}
+```
+
+**Important Notes:**
+- Events with `calendarEventId` are synced from Google Calendar
+- Events without `calendarEventId` are manual and preserved during sync
+- The sync merges both types, keeping manual events intact
+- After adding events to Google Calendar, manually trigger sync or wait for automatic sync
 
 ## File Management & Recovery
 

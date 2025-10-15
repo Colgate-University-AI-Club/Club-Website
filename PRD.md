@@ -232,17 +232,29 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 - **Data Source:** Supabase `jobs` table (+ legacy `jobs.json` fallback)
 
 #### 5. **Events Page** (`/events`)
-- **Status:** ✅ Complete
-- **Description:** Event listings with Google Calendar integration
+- **Status:** ✅ Complete (Enhanced with Google Calendar Sync)
+- **Description:** Event listings with Google Calendar integration and automated sync
 - **Features:**
   - Upcoming events list (sorted by start date)
   - Past events section
   - Event details: date, time, location, description
   - RSVP links
-  - Google Calendar embed (iframe placeholder)
+  - Google Calendar embed (iframe with live calendar)
   - Event filtering (upcoming vs. past)
-- **Files:** `app/events/page.tsx`, `components/events/EventCard.tsx`
-- **Data Source:** `app/data/events.json`
+  - **Google Calendar API sync:**
+    - Automatic event synchronization from Google Calendar
+    - Manual sync endpoint: `/api/events/sync`
+    - Rate limiting (1 minute cooldown between syncs)
+    - Preserves manual events while syncing calendar events
+    - Updates existing events and adds new ones
+    - Sync status display showing last sync time
+- **Files:**
+  - `app/events/page.tsx`
+  - `components/events/EventCard.tsx`
+  - `components/events/EventSyncStatus.tsx`
+  - `app/api/events/sync/route.ts`
+  - `lib/calendar.ts`
+- **Data Source:** `app/data/events.json` (hybrid: manual + Google Calendar synced events)
 
 #### 6. **Projects Page** (`/projects`)
 - **Status:** ✅ Complete (Enhanced with Project Type System)
@@ -297,14 +309,22 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
     - Icon indicator
     - Lists all tools with "key" or "account/installation" requirement
     - Based on tools array
-  - Full project description (markdown body rendered with ReactMarkdown)
-  - Comprehensive markdown content (2000+ words):
-    - Project overview
-    - Learning objectives
-    - Prerequisites
-    - Step-by-step implementation guide
-    - Code examples and snippets
-    - Expected outcomes
+  - **Project Details Section (Enhanced Styling):**
+    - Rendered with ReactMarkdown (Markdown format only, no HTML)
+    - **Enhanced typography with Colgate branding:**
+      - Larger base font size (prose-lg)
+      - H2 headings in maroon (text-red-800) with bottom border accents
+      - Increased spacing between sections (mt-12 for H2, mt-8 for H3)
+      - Relaxed line heights for better readability
+      - Enhanced list spacing with proper indentation
+      - Well-styled inline code and code blocks
+    - Comprehensive markdown content (2000+ words):
+      - Project overview
+      - Learning objectives
+      - Prerequisites
+      - Step-by-step implementation guide
+      - Code examples and snippets
+      - Expected outcomes
   - Resource links (tutorials, docs, datasets, tools)
   - **Enhanced Repository/Workflow Buttons:**
     - GitHub repository link with GitHub icon (for code projects)
@@ -1610,7 +1630,15 @@ supabase
 
 ## Changelog
 
-### v1.1.0 (Current - October 14, 2025)
+### v1.1.1 (Current - October 15, 2025)
+- ✅ **Google Calendar Event Sync** - Implemented and tested calendar sync functionality
+- ✅ **Fixed HTML Rendering in Projects** - Converted all project body content from HTML to Markdown
+- ✅ **Enhanced Project Details Styling** - Improved visual hierarchy with maroon accents and better spacing
+- ✅ Event sync via `/api/events/sync` endpoint working correctly
+- ✅ All 6 projects (p2-p7) now render properly with Markdown formatting
+- ✅ Project details section redesigned with clean, readable typography
+
+### v1.1.0 (October 14, 2025)
 - ✅ **DEPLOYED TO VERCEL** - Production site live
 - ✅ Project type system (code/no-code/hybrid)
 - ✅ Dual filtering (type + level) on projects page

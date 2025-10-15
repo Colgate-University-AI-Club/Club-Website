@@ -1,5 +1,5 @@
 {
-  "lastSyncedAt": "2025-10-14T18:53:02.506Z",
+  "lastSyncedAt": "2025-10-15T00:11:05.127Z",
   "events": [
     {
       "id": "e1",
@@ -8,6 +8,14 @@
       "location": "Persson Hall 27",
       "description": "Overview + projects",
       "rsvpUrl": "https://forms.gle/placeholder"
+    },
+    {
+      "id": "4b984bba-152f-44c6-bc00-24794f1eebf3",
+      "title": "AI Club Meeting: Introduction to Artificial Intelligence",
+      "startsAt": "2025-10-30T19:00:00-04:00",
+      "endsAt": "2025-10-30T20:00:00-04:00",
+      "location": "105 Lawrence Hall (Lecture room on first floor)",
+      "calendarEventId": "2dkl23l3ppp4kd1tni1gufucm6"
     }
   ]
 }

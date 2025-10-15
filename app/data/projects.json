@@ -49,7 +49,7 @@
         "url": "https://www.pinecone.io/docs/"
       }
     ],
-    "body": "<h2>Overview</h2><p>Learn to build a chatbot that can answer questions about course materials by combining document retrieval with AI generation.</p><h2>What You'll Learn</h2><ul><li>RAG architecture basics</li><li>Vector databases (Pinecone)</li><li>Workflow automation with n8n</li><li>Integrating OpenAI API</li></ul><h2>Prerequisites</h2><ul><li>n8n account (free)</li><li>OpenAI API key</li><li>Pinecone account (free tier)</li><li>Course PDFs or documents</li></ul>"
+    "body": "## Overview\n\nLearn to build a chatbot that can answer questions about course materials by combining document retrieval with AI generation.\n\n## What You'll Learn\n\n- RAG architecture basics\n- Vector databases (Pinecone)\n- Workflow automation with n8n\n- Integrating OpenAI API\n\n## Prerequisites\n\n- n8n account (free)\n- OpenAI API key\n- Pinecone account (free tier)\n- Course PDFs or documents"
   },
   {
     "id": "p3",
@@ -71,7 +71,7 @@
         "url": "https://www.figma.com"
       }
     ],
-    "body": "<h2>Overview</h2><p>Use AI-powered design tools to create a professional restaurant website in hours, not days.</p><h2>What You'll Build</h2><ul><li>Modern landing page</li><li>Menu showcase</li><li>Reservation form</li><li>Contact section</li></ul><h2>Tools Needed</h2><ul><li>Lovable.dev account</li><li>Restaurant images and menu</li></ul>"
+    "body": "## Overview\n\nUse AI-powered design tools to create a professional restaurant website in hours, not days.\n\n## What You'll Build\n\n- Modern landing page\n- Menu showcase\n- Reservation form\n- Contact section\n\n## Tools Needed\n\n- Lovable.dev account\n- Restaurant images and menu"
   },
   {
     "id": "p4",
@@ -93,7 +93,7 @@
         "url": "https://platform.openai.com/docs"
       }
     ],
-    "body": "<h2>Overview</h2><p>Automate your email workflow using AI to save hours every week.</p><h2>Features</h2><ul><li>Auto-categorize emails (urgent/spam/personal/work)</li><li>Priority scoring</li><li>AI-generated draft responses</li><li>Smart notifications</li></ul><h2>Setup</h2><p>Connect your Gmail account to n8n, configure OpenAI API, and set up categorization rules.</p>"
+    "body": "## Overview\n\nAutomate your email workflow using AI to save hours every week.\n\n## Features\n\n- Auto-categorize emails (urgent/spam/personal/work)\n- Priority scoring\n- AI-generated draft responses\n- Smart notifications\n\n## Setup\n\nConnect your Gmail account to n8n, configure OpenAI API, and set up categorization rules."
   },
   {
     "id": "p5",
@@ -115,7 +115,7 @@
         "url": "https://platform.openai.com/docs/guides/images"
       }
     ],
-    "body": "<h2>Overview</h2><p>Build an end-to-end workflow that takes product descriptions and automatically generates marketing images.</p><h2>Workflow Steps</h2><ol><li>Product info entered in Airtable</li><li>Make.com triggers on new entries</li><li>DALL-E generates product images</li><li>Images saved to cloud storage</li><li>Team notified via Slack</li></ol><h2>Use Cases</h2><ul><li>E-commerce product photos</li><li>Social media content</li><li>Marketing campaigns</li></ul>"
+    "body": "## Overview\n\nBuild an end-to-end workflow that takes product descriptions and automatically generates marketing images.\n\n## Workflow Steps\n\n1. Product info entered in Airtable\n2. Make.com triggers on new entries\n3. DALL-E generates product images\n4. Images saved to cloud storage\n5. Team notified via Slack\n\n## Use Cases\n\n- E-commerce product photos\n- Social media content\n- Marketing campaigns"
   },
   {
     "id": "p6",
@@ -137,7 +137,7 @@
         "url": "https://www.salesforce.com"
       }
     ],
-    "body": "<h2>Overview</h2><p>Combine Python scripts with automation tools to build a professional lead generation pipeline.</p><h2>System Architecture</h2><ul><li>Python: Web scraping, data processing, ML-based lead scoring</li><li>n8n: Workflow orchestration, email outreach</li><li>PostgreSQL: Lead database</li><li>OpenAI: Personalized email generation</li></ul><h2>What You'll Learn</h2><ul><li>Web scraping ethics and techniques</li><li>Machine learning for lead scoring</li><li>API integration</li><li>Workflow automation</li></ul>"
+    "body": "## Overview\n\nCombine Python scripts with automation tools to build a professional lead generation pipeline.\n\n## System Architecture\n\n- **Python**: Web scraping, data processing, ML-based lead scoring\n- **n8n**: Workflow orchestration, email outreach\n- **PostgreSQL**: Lead database\n- **OpenAI**: Personalized email generation\n\n## What You'll Learn\n\n- Web scraping ethics and techniques\n- Machine learning for lead scoring\n- API integration\n- Workflow automation"
   },
   {
     "id": "p7",
@@ -159,6 +159,6 @@
         "url": "https://plotly.com/python/"
       }
     ],
-    "body": "<h2>Overview</h2><p>Build a beautiful dashboard that visualizes trends in AI research papers from ArXiv.</p><h2>Features</h2><ul><li>Live data from ArXiv API</li><li>Interactive charts and graphs</li><li>Topic clustering visualization</li><li>Citation network analysis</li></ul><h2>Tech Stack</h2><ul><li>Streamlit for the web interface</li><li>Pandas for data processing</li><li>Plotly for interactive visualizations</li></ul>"
+    "body": "## Overview\n\nBuild a beautiful dashboard that visualizes trends in AI research papers from ArXiv.\n\n## Features\n\n- Live data from ArXiv API\n- Interactive charts and graphs\n- Topic clustering visualization\n- Citation network analysis\n\n## Tech Stack\n\n- **Streamlit** for the web interface\n- **Pandas** for data processing\n- **Plotly** for interactive visualizations"
   }
 ]
