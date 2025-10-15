@@ -14,8 +14,6 @@ export default function EventSyncStatus({ lastSyncedAt }: EventSyncStatusProps) 
   const [syncSuccess, setSyncSuccess] = useState(false)
   const [localLastSynced, setLocalLastSynced] = useState(lastSyncedAt)
 
-  const isDevelopment = process.env.NODE_ENV === 'development'
-
   const handleSync = async () => {
     setIsSyncing(true)
     setSyncError(null)
@@ -36,13 +34,10 @@ export default function EventSyncStatus({ lastSyncedAt }: EventSyncStatusProps) 
       setLocalLastSynced(new Date().toISOString())
       setSyncSuccess(true)
 
-      // In development, just show success message without refresh to avoid HMR conflicts
-      // In production, use window.location.reload() to update the page
-      if (process.env.NODE_ENV === 'production') {
-        setTimeout(() => {
-          window.location.reload()
-        }, 1000)
-      }
+      // Reload page to show updated events
+      setTimeout(() => {
+        window.location.reload()
+      }, 1500)
     } catch (error) {
       console.error('Sync error:', error)
       setSyncError(error instanceof Error ? error.message : 'Failed to sync events')
@@ -64,16 +59,14 @@ export default function EventSyncStatus({ lastSyncedAt }: EventSyncStatusProps) 
           )}
         </div>
 
-        {isDevelopment && (
-          <button
-            onClick={handleSync}
-            disabled={isSyncing}
-            className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <RefreshCw className={`w-4 h-4 mr-1.5 ${isSyncing ? 'animate-spin' : ''}`} />
-            {isSyncing ? 'Syncing...' : 'Sync Now'}
-          </button>
-        )}
+        <button
+          onClick={handleSync}
+          disabled={isSyncing}
+          className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 mr-1.5 ${isSyncing ? 'animate-spin' : ''}`} />
+          {isSyncing ? 'Syncing...' : 'Sync Now'}
+        </button>
       </div>
 
       {syncError && (
@@ -85,10 +78,7 @@ export default function EventSyncStatus({ lastSyncedAt }: EventSyncStatusProps) 
       {syncSuccess && (
         <div className="mt-2 text-sm text-green-600 flex items-center">
           <CheckCircle className="w-4 h-4 mr-1.5" />
-          <span>
-            Events synced successfully!
-            {isDevelopment && ' Refresh the page to see updates.'}
-          </span>
+          <span>Events synced successfully! Page will refresh...</span>
         </div>
       )}
     </div>

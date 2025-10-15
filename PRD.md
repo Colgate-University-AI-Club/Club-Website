@@ -233,7 +233,7 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 
 #### 5. **Events Page** (`/events`)
 - **Status:** ✅ Complete (Enhanced with Google Calendar Sync)
-- **Description:** Event listings with Google Calendar integration and automated sync
+- **Description:** Event listings with Google Calendar integration and manual sync
 - **Features:**
   - Upcoming events list (sorted by start date)
   - Past events section
@@ -242,12 +242,13 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
   - Google Calendar embed (iframe with live calendar)
   - Event filtering (upcoming vs. past)
   - **Google Calendar API sync:**
-    - Automatic event synchronization from Google Calendar
-    - Manual sync endpoint: `/api/events/sync`
-    - Rate limiting (1 minute cooldown between syncs)
+    - Manual "Sync Now" button for on-demand synchronization
+    - Sync endpoint: `/api/events/sync` (POST request)
+    - Rate limiting (1 minute cooldown between manual syncs)
     - Preserves manual events while syncing calendar events
     - Updates existing events and adds new ones
-    - Sync status display showing last sync time
+    - Sync status display showing last sync time and sync button
+    - Visible in both development and production environments
 - **Files:**
   - `app/events/page.tsx`
   - `components/events/EventCard.tsx`
@@ -1082,6 +1083,68 @@ npm run sync-news    # Manually trigger news sync (requires dev server)
 
 ---
 
+### Troubleshooting Production Deployment
+
+**Issue: Git push doesn't trigger Vercel deployment**
+
+**Symptoms:**
+- Code successfully pushed to GitHub
+- Vercel dashboard shows no new deployment
+- Changes not visible on production site
+
+**Possible Causes:**
+1. **Webhook disconnected** - GitHub → Vercel webhook may have been broken
+2. **Cron job conflicts** - Adding `vercel.json` with cron jobs can sometimes interfere with webhooks
+3. **Rate limiting** - Multiple rapid deployments may trigger temporary blocks
+
+**Solutions:**
+
+**Option 1: Manual Redeploy via Vercel Dashboard** (Recommended)
+```
+1. Go to Vercel Dashboard → Your Project
+2. Navigate to "Deployments" tab
+3. Find most recent deployment
+4. Click three-dot menu (•••)
+5. Select "Redeploy"
+6. Confirm redeployment
+```
+
+**Option 2: Vercel CLI Deployment**
+```bash
+# Authenticate (first time only)
+vercel login
+
+# Deploy to production
+cd colgate-ai-club
+vercel --prod
+```
+
+**Option 3: Force Webhook Trigger**
+```bash
+# Create small change to trigger webhook
+git commit --allow-empty -m "Trigger deployment"
+git push origin main
+```
+
+**Option 4: Reconnect GitHub Integration**
+```
+1. Vercel Dashboard → Project Settings → Git
+2. Disconnect GitHub repository
+3. Reconnect GitHub repository
+4. Verify webhook is active
+```
+
+**Debugging Steps:**
+1. Verify commit is on GitHub: `git log --oneline -3` and check GitHub repo
+2. Check Vercel deployment history for errors
+3. Review Vercel project settings for Git connection status
+4. Check Vercel status page for platform issues
+5. Review build logs if deployment started but failed
+
+**See `CLAUDE.md` for complete deployment troubleshooting procedures.**
+
+---
+
 ### Project Type System Architecture
 
 The projects section implements a comprehensive classification system to support three types of AI/ML learning projects:
@@ -1630,7 +1693,14 @@ supabase
 
 ## Changelog
 
-### v1.1.1 (Current - October 15, 2025)
+### v1.1.2 (Current - October 15, 2025)
+- ✅ **Manual Calendar Sync Button** - Enabled manual "Sync Now" button on Events page for both development and production
+- ✅ **Deployment Troubleshooting** - Investigated and documented Vercel webhook deployment issues
+- ✅ **Deployment Testing** - Created test commits to isolate webhook vs deployment issues
+- ✅ **Documentation Updates** - Comprehensive deployment troubleshooting guides in PRD.md and CLAUDE.md
+- ✅ Removed automatic cron job configuration (manual sync preferred for better control)
+
+### v1.1.1 (October 15, 2025)
 - ✅ **Google Calendar Event Sync** - Implemented and tested calendar sync functionality
 - ✅ **Fixed HTML Rendering in Projects** - Converted all project body content from HTML to Markdown
 - ✅ **Enhanced Project Details Styling** - Improved visual hierarchy with maroon accents and better spacing

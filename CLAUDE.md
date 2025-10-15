@@ -283,7 +283,7 @@ Each sample includes realistic markdown guides with code examples, learning obje
 ## Google Calendar Event Sync
 
 ### Overview
-The events page integrates with Google Calendar to automatically sync events from a shared calendar into `app/data/events.json`.
+The events page integrates with Google Calendar to sync events from a shared calendar into `app/data/events.json` via a manual "Sync Now" button.
 
 ### Sync Endpoint
 **URL:** `/api/events/sync` (POST)
@@ -295,7 +295,7 @@ The events page integrates with Google Calendar to automatically sync events fro
 - Updates existing calendar events
 - Adds new calendar events
 - Removes deleted calendar events
-- Rate limiting: 1 minute cooldown between syncs (except Vercel Cron)
+- Rate limiting: 1 minute cooldown between manual sync requests
 
 **Configuration:**
 Required environment variables in `.env.local`:
@@ -304,15 +304,24 @@ GOOGLE_CALENDAR_API_KEY=your_google_calendar_api_key
 GOOGLE_CALENDAR_ID=your_calendar_id@group.calendar.google.com
 ```
 
-**Manual Sync:**
-```bash
-curl -X POST "http://127.0.0.1:3000/api/events/sync"
-```
+**Manual Sync Options:**
+
+1. **Via UI (Recommended):**
+   - Navigate to `/events` page
+   - Click "Sync Now" button below the calendar
+   - Available in both development and production
+   - Shows real-time sync status and success message
+   - Automatically refreshes page after successful sync
+
+2. **Via API (Development/Testing):**
+   ```bash
+   curl -X POST "http://127.0.0.1:3000/api/events/sync"
+   ```
 
 **Files:**
 - `app/api/events/sync/route.ts` - Sync endpoint
 - `lib/calendar.ts` - Google Calendar API utilities
-- `components/events/EventSyncStatus.tsx` - Displays last sync time
+- `components/events/EventSyncStatus.tsx` - Manual sync button and status display
 - `app/data/events.json` - Event data (hybrid: manual + synced)
 
 **Data Structure:**
@@ -338,7 +347,8 @@ curl -X POST "http://127.0.0.1:3000/api/events/sync"
 - Events with `calendarEventId` are synced from Google Calendar
 - Events without `calendarEventId` are manual and preserved during sync
 - The sync merges both types, keeping manual events intact
-- After adding events to Google Calendar, manually trigger sync or wait for automatic sync
+- After adding events to Google Calendar, use the "Sync Now" button on the `/events` page to fetch updates
+- No automatic/scheduled syncing - all syncs are triggered manually by users
 
 ## File Management & Recovery
 
@@ -553,6 +563,77 @@ To enable automatic calendar sync every 6 hours:
 - Check for TypeScript errors
 - Verify all dependencies are in package.json
 - Check Node.js version matches Vercel settings (20.x)
+
+#### Deployment Webhook Not Triggering
+
+**Problem:** Git push succeeds but Vercel doesn't automatically deploy
+
+**Symptoms:**
+- `git push origin main` completes successfully
+- Commit appears on GitHub
+- Vercel Deployments tab shows no new deployment
+- Production site doesn't reflect recent changes
+
+**Common Causes:**
+1. **Webhook Disconnected** - GitHub → Vercel integration broken
+2. **Cron Job Conflicts** - Adding `vercel.json` with cron configuration can interfere with webhooks
+3. **Rate Limiting** - Multiple rapid pushes may trigger temporary deployment blocks
+4. **GitHub App Permissions** - Vercel GitHub app may need re-authorization
+
+**Solutions (in order of preference):**
+
+**Option 1: Manual Redeploy via Vercel Dashboard** (Fastest)
+```
+1. Navigate to https://vercel.com/dashboard
+2. Select your project
+3. Go to "Deployments" tab
+4. Find most recent deployment
+5. Click three-dot menu (•••) next to it
+6. Select "Redeploy"
+7. Click "Redeploy" to confirm
+```
+This bypasses the webhook entirely and forces Vercel to pull latest code from GitHub.
+
+**Option 2: Vercel CLI Deployment**
+```bash
+# First time only - authenticate
+vercel login
+
+# Deploy to production
+cd "/Users/seabasstheman/Desktop/AI Club Website/colgate-ai-club"
+vercel --prod --yes
+```
+
+**Option 3: Force Webhook Re-trigger**
+```bash
+# Create empty commit to trigger webhook
+git commit --allow-empty -m "Trigger deployment webhook"
+git push origin main
+```
+If this works, the webhook is functional but may have skipped previous commits.
+
+**Option 4: Reconnect GitHub Integration**
+```
+1. Vercel Dashboard → Project Settings → Git
+2. Click "Disconnect" to remove GitHub integration
+3. Click "Connect Git Repository"
+4. Re-authorize Vercel GitHub App
+5. Select repository again
+6. Verify webhook appears in GitHub repo settings
+```
+
+**Debugging Checklist:**
+- [ ] Verify commit is on GitHub: `git log --oneline -3` matches GitHub commits
+- [ ] Check Vercel deployment history for any errors or stuck builds
+- [ ] Review Vercel project Git settings for connection status
+- [ ] Check GitHub repo → Settings → Webhooks for Vercel webhook (should show recent deliveries)
+- [ ] Review Vercel status page: https://www.vercel-status.com/
+- [ ] Check for build errors in previous deployments that might block new ones
+
+**Prevention:**
+- Avoid rapid successive pushes (wait for previous deployment to complete)
+- Test `vercel.json` changes locally before pushing
+- Monitor Vercel dashboard for deployment confirmations after pushing
 
 ### Post-Deployment Tasks
 
