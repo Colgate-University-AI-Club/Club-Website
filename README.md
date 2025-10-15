@@ -103,6 +103,7 @@ For automatic syncing in production, set up a Vercel Cron Job (see CLAUDE.md for
 2. Import project in Vercel
 3. Configure environment variables (see above)
 4. Deploy
+5. Set up Vercel Cron Job for automatic calendar sync (optional)
 
 For a comprehensive deployment checklist and troubleshooting guide, see `CLAUDE.md`.
 
