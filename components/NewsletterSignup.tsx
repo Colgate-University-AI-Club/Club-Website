@@ -42,7 +42,7 @@ export default function NewsletterSignup({ variant = 'footer', className = '' }:
 
     try {
       console.log('📡 Making fetch request to webhook...')
-      const response = await fetch('https://seabass34.app.n8n.cloud/webhook/9245414e-3af7-40f8-98ab-cd50d44750b5', {
+      const response = await fetch('https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
