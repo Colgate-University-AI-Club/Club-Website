@@ -1564,8 +1564,53 @@ transition-all duration-200 hover:-translate-y-1 hover:shadow-lg
 
 ---
 
-#### Jobs Sync Workflow (Planned)
+#### Newsletter Signup Workflow
 **Webhook URL:** `https://seabass34.app.n8n.cloud/webhook/9245414e-3af7-40f8-98ab-cd50d44750b5`
+
+**Trigger:** HTTP POST request from `/api/newsletter/subscribe` endpoint
+
+**Purpose:** Process newsletter signups from the website and add subscribers to email list
+
+**Workflow Steps:**
+1. Receive webhook POST from API proxy
+2. Extract email, timestamp, source, and IP from payload
+3. Validate email is not already subscribed
+4. Add to email list (Buttondown, Mailchimp, or similar)
+5. Send welcome email (optional)
+6. Log subscription to Google Sheets or database
+7. Return success response
+
+**API Endpoint:** `https://www.colgateaiclub.com/api/newsletter/subscribe` (POST)
+
+**How It Works:**
+- Client calls `/api/newsletter/subscribe` with email
+- API proxy validates email and forwards to n8n webhook
+- Server-to-server request bypasses CORS restrictions
+- n8n processes signup and returns success/failure
+
+**Configuration:**
+- **Method:** POST (webhook configured to accept POST requests)
+- **Request Body:**
+  ```json
+  {
+    "email": "user@example.com",
+    "timestamp": "2025-10-31T12:00:00Z",
+    "source": "AI Club Website",
+    "ip": "192.168.1.1"
+  }
+  ```
+- **Response:** HTTP 200 on success
+
+**Error Handling:**
+- Email validation in API proxy
+- Rate limiting (10 requests/min per IP)
+- Duplicate email detection in n8n
+- Detailed error logging
+
+---
+
+#### Jobs Sync Workflow (Planned)
+**Status:** Not yet implemented
 
 **Trigger:** Scheduled (daily/weekly)
 
