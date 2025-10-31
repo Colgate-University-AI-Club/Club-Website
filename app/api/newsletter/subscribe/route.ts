@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isValidEmail } from '@/lib/validators'
 
 // n8n webhook URL for newsletter signups
-const N8N_NEWSLETTER_WEBHOOK = 'https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c'
+const N8N_NEWSLETTER_WEBHOOK = 'https://seabass34.app.n8n.cloud/webhook/9245414e-3af7-40f8-98ab-cd50d44750b5'
 
 // Simple in-memory rate limiting (10 requests per minute per IP)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>()

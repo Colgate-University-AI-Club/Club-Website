@@ -380,7 +380,7 @@ Create an API proxy route that forwards requests server-side (server-to-server r
 import { NextRequest, NextResponse } from 'next/server'
 import { isValidEmail } from '@/lib/validators'
 
-const N8N_NEWSLETTER_WEBHOOK = 'https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c'
+const N8N_NEWSLETTER_WEBHOOK = 'https://seabass34.app.n8n.cloud/webhook/9245414e-3af7-40f8-98ab-cd50d44750b5'
 
 export async function POST(request: NextRequest) {
   // Email validation
@@ -452,7 +452,7 @@ if (response.ok && data.success) {
 5. Send welcome email (optional)
 6. Log subscription to Google Sheets or database
 
-**Webhook URL:** `https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c`
+**Webhook URL:** `https://seabass34.app.n8n.cloud/webhook/9245414e-3af7-40f8-98ab-cd50d44750b5`
 
 ## Projects System
 
