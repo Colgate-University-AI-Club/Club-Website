@@ -101,15 +101,17 @@ The server runs at **http://127.0.0.1:3000**
 
 ## Architecture Overview
 
-This is a **Colgate AI Club website** built with Next.js 15 (App Router), TypeScript, and Tailwind CSS. The site renders content from JSON files without requiring a database or authentication.
+This is a **Colgate AI Club website** built with Next.js 15 (App Router), TypeScript, and Tailwind CSS. The site renders content from Supabase database tables (news, jobs) and JSON files (events, projects) without requiring authentication.
 
 ### Data-Driven Content Model
-Content is stored in `app/data/*.json` files and rendered through dedicated pages:
-- `news.json` → `/news` page with tag filtering and pagination
-- `jobs.json` → `/jobs` page with tag filtering and pagination
-- `events.json` → `/events` page showing upcoming events + Google Calendar embed
-- `projects.json` → `/projects` list page + individual `/projects/[slug]` detail pages
-- `contribute-queue.json` → Created dynamically by API submissions
+Content is stored in both Supabase database tables and `app/data/*.json` files:
+- **Supabase tables:**
+  - `news` → `/news` page with tag filtering and pagination (tags auto-generated)
+  - `jobs` → `/jobs` page with tag filtering and pagination
+- **JSON files:**
+  - `events.json` → `/events` page showing upcoming events + Google Calendar embed
+  - `projects.json` → `/projects` list page + individual `/projects/[slug]` detail pages
+  - `contribute-queue.json` → Created dynamically by API submissions
 
 All content types use TypeScript definitions in `lib/types.ts` (`NewsItem`, `JobItem`, `EventItem`, `ProjectItem`).
 
@@ -158,6 +160,299 @@ The `/contribute` form accepts resource submissions with client-side validation 
 - Static generation where possible, dynamic rendering for filtered pages
 - Optimized with Next.js 15 and Turbopack bundler
 - Follow the styling and layout approach of the home page for all other page builds.
+
+## News System (Supabase)
+
+### Overview
+The news system stores articles in a Supabase PostgreSQL database and supports automated ingestion from n8n workflows. News articles can be from external sources (RSS feeds, scraped content) or club posts.
+
+### Database Schema
+
+**Table:** `news`
+
+```sql
+CREATE TABLE news (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  card_summary TEXT,
+  content TEXT,
+  source_type TEXT NOT NULL CHECK (source_type IN ('club', 'external')),
+  url TEXT NOT NULL UNIQUE,
+  published_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable Row Level Security
+ALTER TABLE news ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Allow public read access
+CREATE POLICY "Enable read access for all users" ON news
+  FOR SELECT USING (true);
+
+-- Policy: Allow service role to insert/update
+CREATE POLICY "Enable insert for service role" ON news
+  FOR INSERT WITH CHECK (true);
+
+CREATE POLICY "Enable update for service role" ON news
+  FOR UPDATE USING (true);
+```
+
+**Key Features:**
+- `source_type`: Distinguishes between club posts and external articles
+- `url`: Unique constraint prevents duplicate articles
+- Tags are generated on-the-fly using `extractTags()` function (not stored)
+- No `updated_at` column (deemed irrelevant)
+
+### Data Access Layer
+
+**File:** `lib/news.ts`
+
+```typescript
+import { createClient } from '@supabase/supabase-js'
+import { NewsItem } from './types'
+import { extractTags } from './tags'
+
+export async function getNews(): Promise<NewsItem[]> {
+  const { data, error } = await supabase
+    .from('news')
+    .select('*')
+    .order('published_at', { ascending: false })
+
+  return (data as SupabaseNewsRow[]).map(row => ({
+    id: row.id,
+    title: row.title,
+    summary: row.card_summary || undefined,
+    content: row.content || undefined,
+    sourceType: row.source_type,
+    url: row.url,
+    tags: extractTags(row.title, row.content || ''),
+    publishedAt: row.published_at
+  }))
+}
+
+export async function getNewsById(id: string): Promise<NewsItem | null> {
+  // Similar implementation with single article fetch
+}
+```
+
+### News API Endpoint
+
+**Endpoint:** `/api/news` (POST)
+
+**Purpose:** Accepts news articles from n8n workflows and upserts them into Supabase
+
+**Request Body:** Array of articles (sent as RAW JSON array, not wrapped in object)
+
+```json
+[
+  {
+    "url": "https://example.com/article",
+    "title": "Article Title",
+    "published_date": "2025-10-31T12:00:00Z",
+    "content": "Full article content...",
+    "card_summary": "Brief summary for card display"
+  }
+]
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Added/updated 5 articles. Total external articles: 42",
+  "added": 5,
+  "total": 42
+}
+```
+
+**Implementation Details:**
+- Uses `SUPABASE_SERVICE_ROLE_KEY` for write access (falls back to anon key)
+- Upserts based on `url` field (prevents duplicates)
+- Transforms `published_date` to ISO 8601 format
+- Sets `source_type` to 'external' for n8n articles
+- Returns count of added/updated articles
+
+**File:** `app/api/news/route.ts`
+
+### n8n Integration
+
+**Workflow Configuration:**
+
+1. **HTTP Request Node Settings:**
+   - Method: POST
+   - URL: `https://www.colgateaiclub.com/api/news`
+   - Headers: `Content-Type: application/json`
+   - **Body Type:** RAW (NOT "Using Fields Below")
+   - **Body Expression:** `{{ $json.articles }}`
+
+2. **Data Transformation:**
+   - Fetch articles from RSS feeds or scraping nodes
+   - Transform `published_date` to ISO 8601: `{{ new Date($json.pubDate).toISOString() }}`
+   - Ensure array structure (not wrapped in object)
+
+3. **Error Handling:**
+   - Workflow includes retry logic (3 attempts)
+   - API returns detailed error messages
+   - Logs success/failure to n8n console
+
+**Common Issues:**
+
+- **"b.filter is not a function":** Body sent as object instead of array
+  - Fix: Use RAW body type with expression `{{ $json.articles }}`
+- **"read-only file system":** Attempting to write to JSON files in production
+  - Fix: Already resolved - now uses Supabase
+- **Date format errors:** Published date not in ISO 8601 format
+  - Fix: Use `new Date(dateString).toISOString()` in n8n
+
+### Page Implementation
+
+**News List:** `app/news/page.tsx`
+- Fetches articles with `getNews()` from `lib/news.ts`
+- Uses `export const revalidate = 0` to disable caching
+- Supports tag filtering and pagination
+
+**News Detail:** `app/news/[id]/page.tsx`
+- Fetches single article with `getNewsById(id)`
+- Uses `export const dynamic = 'force-dynamic'` for fresh data
+- Displays full content, summary, tags, and external link (if applicable)
+
+**Homepage:** `app/page.tsx`
+- Shows 3 latest articles from `getNews().slice(0, 3)`
+- Also uses `export const revalidate = 0`
+
+## Newsletter System
+
+### Overview
+The newsletter signup form uses an API proxy pattern to avoid CORS errors when posting to n8n webhooks. Client-side code calls our API, which forwards requests server-side to n8n.
+
+### The CORS Problem
+
+**Original Issue:**
+```
+Access to fetch at 'https://seabass34.app.n8n.cloud/webhook/...' from origin 'https://www.colgateaiclub.com'
+has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present
+```
+
+**Why it happens:**
+- Browsers block cross-origin requests from client JavaScript for security
+- n8n webhooks don't include CORS headers by default
+- Direct client-to-n8n requests are blocked in production
+
+**Solution:**
+Create an API proxy route that forwards requests server-side (server-to-server requests bypass CORS)
+
+### API Proxy Implementation
+
+**Endpoint:** `/api/newsletter/subscribe` (POST)
+
+**Request Body:**
+```json
+{
+  "email": "user@example.com"
+}
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "message": "Successfully subscribed to newsletter"
+}
+```
+
+**Response (Error):**
+```json
+{
+  "success": false,
+  "error": "Invalid email address"
+}
+```
+
+**Features:**
+1. **Email Validation:** Uses `isValidEmail()` from `lib/validators.ts`
+2. **Rate Limiting:** 10 requests per minute per IP address
+3. **Metadata Enrichment:** Adds timestamp, source, and IP to n8n payload
+4. **Error Handling:** Catches and returns detailed error messages
+
+**File:** `app/api/newsletter/subscribe/route.ts`
+
+```typescript
+import { NextRequest, NextResponse } from 'next/server'
+import { isValidEmail } from '@/lib/validators'
+
+const N8N_NEWSLETTER_WEBHOOK = 'https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c'
+
+export async function POST(request: NextRequest) {
+  // Email validation
+  const { email } = await request.json()
+  if (!isValidEmail(email)) {
+    return NextResponse.json(
+      { success: false, error: 'Invalid email address' },
+      { status: 400 }
+    )
+  }
+
+  // Rate limiting check
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  // ... rate limiting logic ...
+
+  // Forward to n8n webhook
+  const n8nResponse = await fetch(N8N_NEWSLETTER_WEBHOOK, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email,
+      timestamp: new Date().toISOString(),
+      source: 'website',
+      ip
+    })
+  })
+
+  return NextResponse.json({
+    success: true,
+    message: 'Successfully subscribed to newsletter'
+  })
+}
+```
+
+### Client-Side Integration
+
+**Component:** `components/NewsletterSignup.tsx`
+
+**Before (caused CORS error):**
+```typescript
+const response = await fetch('https://seabass34.app.n8n.cloud/webhook/...', {
+  method: 'POST',
+  mode: 'cors'  // Blocked by browser!
+})
+```
+
+**After (uses API proxy):**
+```typescript
+const response = await fetch('/api/newsletter/subscribe', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email })
+})
+
+const data = await response.json()
+if (response.ok && data.success) {
+  setStatus('success')
+  setMessage('Thank you for subscribing!')
+}
+```
+
+### n8n Webhook Configuration
+
+**Newsletter Workflow:**
+1. Receive webhook POST from API proxy
+2. Extract email, timestamp, source, ip from payload
+3. Validate email is not already subscribed
+4. Add to email list (Buttondown, Mailchimp, etc.)
+5. Send welcome email (optional)
+6. Log subscription to Google Sheets or database
+
+**Webhook URL:** `https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c`
 
 ## Projects System
 
@@ -410,7 +705,9 @@ If you accidentally delete config files:
 - ✅ All 7 projects with GitHub integration
 - ✅ Enhanced project detail pages with tool categorization
 - ✅ Job board with Supabase integration
-- ✅ News, events, and newsletter sections
+- ✅ News system with Supabase integration and n8n automation
+- ✅ Newsletter signup with API proxy (CORS fix)
+- ✅ Events with Google Calendar sync
 - ✅ SEO optimization (sitemap, robots.txt)
 - ✅ Responsive design for mobile and desktop
 
@@ -418,10 +715,13 @@ If you accidentally delete config files:
 
 The following environment variables MUST be configured in Vercel before deploying:
 
-#### Supabase Configuration (Jobs Database)
+#### Supabase Configuration (News & Jobs Database)
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://njmzznceiykpybpuabgs.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5qbXp6bmNlaXlrcHlicHVhYmdzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE5ODI0ODgsImV4cCI6MjA2NzU1ODQ4OH0.SqeHr41yIXqdkxG4jMOTE8u4Yb3nxseujgEg22csj5s
+
+# Optional: Service role key for write operations (more secure for n8n news API)
+# SUPABASE_SERVICE_ROLE_KEY=your_service_role_key_here
 ```
 
 #### GitHub API (Project Repository Stats)

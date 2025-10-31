@@ -91,14 +91,15 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
   - Real-time subscriptions for live updates
   - Job data storage and management
   - Newsletter content management
+  - News article storage and syndication
 - **Data Storage:**
-  - JSON files (`app/data/*.json`) for static content
-  - Supabase for dynamic, frequently-updated content
+  - JSON files (`app/data/*.json`) for static content (events, projects)
+  - Supabase for dynamic, frequently-updated content (jobs, news, newsletters)
 - **External Integrations:**
-  - n8n workflow automation for news syndication
+  - n8n workflow automation for news syndication (posts to `/api/news`)
+  - n8n newsletter signup webhook (via `/api/newsletter/subscribe` proxy)
   - Job board API integrations (via n8n)
-  - Buttondown (placeholder for newsletter)
-  - Google Calendar (embedded iframe for events)
+  - Google Calendar API for event sync
 
 #### Development Tools
 - **Package Manager:** npm
@@ -139,10 +140,11 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
               │                   │
     ┌─────────▼────────┐    ┌─────▼──────────────────────┐
     │  JSON Data Files │    │   Supabase (PostgreSQL)    │
-    │  - news.json     │    │   - jobs table             │
-    │  - events.json   │    │   - newsletters table      │
-    │  - projects.json │    │   - real-time subscriptions│
-    │  - jobs.json     │    │   - Row Level Security     │
+    │  - events.json   │    │   - news table             │
+    │  - projects.json │    │   - jobs table             │
+    │                  │    │   - newsletters table      │
+    │                  │    │   - real-time subscriptions│
+    │                  │    │   - Row Level Security     │
     └──────────────────┘    └────────────────────────────┘
               │
               │
@@ -174,27 +176,32 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 - **File:** `app/page.tsx`
 
 #### 2. **News Page** (`/news`)
-- **Status:** ✅ Complete
-- **Description:** Paginated news feed with filtering
+- **Status:** ✅ Complete (Enhanced with Supabase)
+- **Description:** Paginated news feed with filtering and real-time updates
 - **Features:**
+  - Real-time news updates from Supabase
   - Tag-based filtering (URL query param: `?tag=ai`)
-  - Pagination (12 items per page, query param: `?page=2`)
+  - Tags generated on-the-fly from article content
+  - Pagination (9 items per page, query param: `?page=2`)
   - Source type badges (club/external)
   - Published date display
-  - Automated sync from n8n workflow
+  - Automated sync from n8n workflow to Supabase
   - Dynamic metadata for SEO
-- **Files:** `app/news/page.tsx`, `components/news/NewsCard.tsx`, `scripts/sync-news.js`
-- **Data Source:** `app/data/news.json` (synced from n8n)
+  - No caching for fresh data
+- **Files:** `app/news/page.tsx`, `components/news/NewsCard.tsx`, `lib/news.ts`
+- **Data Source:** Supabase `news` table (synced from n8n via `/api/news`)
 
 #### 3. **News Detail Page** (`/news/[id]`)
-- **Status:** ✅ Complete
-- **Description:** Individual news article view
+- **Status:** ✅ Complete (Enhanced with Supabase)
+- **Description:** Individual news article view with real-time data
 - **Features:**
   - Full article content (markdown rendering)
   - Source attribution
-  - Related tags
+  - Related tags (auto-generated)
   - "Back to News" navigation
-- **File:** `app/news/[id]/page.tsx`
+  - Real-time data from Supabase
+- **File:** `app/news/[id]/page.tsx`, `lib/news.ts`
+- **Data Source:** Supabase `news` table
 
 #### 4. **Jobs Page** (`/jobs`)
 - **Status:** ✅ Complete (Enhanced)
@@ -370,21 +377,26 @@ Create a vibrant digital ecosystem that democratizes AI education, facilitates c
 - **Files:** `app/contribute/page.tsx`, `app/api/contribute/route.ts`
 
 #### 10. **Newsletter System**
-- **Status:** ✅ Complete
-- **Description:** Newsletter archive and signup
+- **Status:** ✅ Complete (Enhanced)
+- **Description:** Newsletter archive and signup with n8n integration
 - **Features:**
   - Newsletter archive page with polling
   - Real-time updates from Supabase
-  - Newsletter signup component (Buttondown placeholder)
+  - Newsletter signup component with CORS-safe API proxy
+  - n8n webhook integration via `/api/newsletter/subscribe`
+  - Rate limiting (10 requests/min per IP)
+  - Email validation
   - Archive view with markdown rendering
   - Polling hook for live updates
 - **Files:**
   - `components/newsletter/NewsletterSection.tsx`
   - `components/newsletter/NewsletterSectionWithPolling.tsx`
+  - `components/NewsletterSignup.tsx`
   - `hooks/useNewsletterPolling.ts`
   - `app/api/newsletters/route.ts`
+  - `app/api/newsletter/subscribe/route.ts` (NEW: CORS proxy)
   - `lib/newsletter.ts`
-- **Data Source:** Supabase `newsletters` table
+- **Data Source:** Supabase `newsletters` table, n8n webhook for signups
 
 #### 11. **Navigation & Layout**
 - **Status:** ✅ Complete
@@ -1512,25 +1524,43 @@ transition-all duration-200 hover:-translate-y-1 hover:shadow-lg
 ### n8n Workflows
 
 #### News Sync Workflow
-**Webhook URL:** `https://seabass34.app.n8n.cloud/webhook/e72f4374-f5b6-4dc8-9e75-29d942960d23`
+**Target Endpoint:** `https://www.colgateaiclub.com/api/news` (POST)
 
-**Trigger:** Manual via `npm run sync-news` or scheduled (daily cron)
+**Trigger:** Scheduled (daily cron) or manual
 
 **Workflow Steps:**
-1. Receive webhook trigger
+1. Trigger workflow (scheduled or manual)
 2. Fetch RSS feeds from AI news sources (TechCrunch, MIT News, etc.)
-3. Extract article data (title, URL, published date)
+3. Extract article data (title, URL, published date, content, summary)
 4. Summarize content using AI (optional)
-5. Generate UUID for each article
-6. Tag articles based on keywords
-7. Deduplicate against existing `news.json`
-8. Return array of new articles
-9. Local script (`sync-news.js`) posts to `/api/news`
-10. API merges new articles into `news.json`
+5. Transform published_date to ISO 8601 format
+6. Format as array of articles:
+   ```json
+   [
+     {
+       "url": "string",
+       "title": "string",
+       "published_date": "ISO 8601 date",
+       "content": "string",
+       "card_summary": "string"
+     }
+   ]
+   ```
+7. HTTP Request node POSTs array to `/api/news`
+8. API upserts articles into Supabase `news` table
+9. Tags auto-generated on-the-fly when articles are fetched
+
+**Configuration:**
+- **Method:** POST
+- **URL:** `https://www.colgateaiclub.com/api/news`
+- **Headers:** `Content-Type: application/json`
+- **Body:** Raw array (not wrapped in object)
+- **Body Expression:** `{{ $json.articles }}` (use Aggregate node if needed)
 
 **Error Handling:**
-- If n8n fails, script logs error and exits
-- If API fails, articles are lost (no retry mechanism yet)
+- Upsert prevents duplicates (based on URL)
+- API returns success/error status
+- Workflow includes retry logic (3 attempts)
 
 ---
 
