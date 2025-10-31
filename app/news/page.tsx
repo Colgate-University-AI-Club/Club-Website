@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { NewsItem } from '@/lib/types'
 import { paginateArray } from '@/lib/paginate'
 import NewsCard from '@/components/news/NewsCard'
 import Pagination from '@/components/common/Pagination'
@@ -9,12 +8,15 @@ import SectionHeader from '@/components/ui/SectionHeader'
 import CardGrid from '@/components/ui/CardGrid'
 import { NewsletterSectionWithPolling } from '@/components/newsletter'
 import { getNewsletters } from '@/lib/newsletter'
-import newsData from '@/app/data/news.json'
+import { getNews } from '@/lib/news'
 import NewsletterNavButton from '@/components/news/NewsletterNavButton'
 
 export const metadata: Metadata = {
   title: 'News – Colgate AI Club',
 }
+
+// Disable caching to ensure fresh data
+export const revalidate = 0
 
 interface NewsPageProps {
   searchParams?: Promise<{
@@ -24,12 +26,9 @@ interface NewsPageProps {
 }
 
 export default async function NewsPage({ searchParams }: NewsPageProps) {
-  // Fetch newsletters from Supabase
+  // Fetch newsletters and news from Supabase
   const newsletters = await getNewsletters()
-
-  const news = (newsData as NewsItem[]).sort((a, b) =>
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  )
+  const news = await getNews()
 
   const params = await searchParams
   const selectedTag = params?.tag

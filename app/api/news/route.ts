@@ -1,9 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFileSync, writeFileSync } from 'fs'
-import { join } from 'path'
-import { v4 as uuidv4 } from 'uuid'
-import { NewsItem } from '@/lib/types'
-import { extractTags } from '@/lib/tags'
+import { createClient } from '@supabase/supabase-js'
 
 interface N8NArticle {
   url: string
@@ -13,8 +9,10 @@ interface N8NArticle {
   card_summary: string
 }
 
-const NEWS_FILE_PATH = join(process.cwd(), 'app/data/news.json')
-const MAX_EXTERNAL_ARTICLES = 30
+// Initialize Supabase client with service role for write access
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 export async function POST(request: NextRequest) {
   try {
@@ -29,67 +27,72 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Read current news data
-    let currentNews: NewsItem[] = []
-    try {
-      const fileContent = readFileSync(NEWS_FILE_PATH, 'utf-8')
-      currentNews = JSON.parse(fileContent)
-    } catch {
-      console.log('No existing news file found, creating new one')
-      currentNews = []
+    if (!Array.isArray(articles)) {
+      return NextResponse.json(
+        { success: false, error: 'Request body must be an array of articles' },
+        { status: 400 }
+      )
     }
 
-    // Separate club articles from external articles
-    const clubArticles = currentNews.filter(item => item.sourceType === 'club')
-    const externalArticles = currentNews.filter(item => item.sourceType === 'external')
+    console.log(`📰 Received ${articles.length} articles from n8n`)
 
-    // Get existing URLs to prevent duplicates
-    const existingUrls = new Set(externalArticles.map(item => item.url))
+    // Transform articles to database format
+    const newsRecords = articles.map(article => ({
+      title: article.title,
+      card_summary: article.card_summary,
+      content: article.content,
+      source_type: 'external' as const,
+      url: article.url,
+      published_at: new Date(article.published_date).toISOString()
+    }))
 
-    // Transform and filter new articles
-    const newArticles: NewsItem[] = articles
-      .filter(article => !existingUrls.has(article.url)) // Remove duplicates
-      .map(article => ({
-        id: uuidv4(),
-        title: article.title,
-        summary: article.card_summary,
-        content: article.content,
-        sourceType: 'external' as const,
-        url: article.url,
-        tags: extractTags(article.title, article.content),
-        publishedAt: new Date(article.published_date).toISOString()
-      }))
+    // Upsert articles (insert or update if URL already exists)
+    const { data, error } = await supabase
+      .from('news')
+      .upsert(newsRecords, {
+        onConflict: 'url',
+        ignoreDuplicates: false
+      })
+      .select()
 
-    // Combine all external articles and sort by publishedAt (newest first)
-    const allExternalArticles = [...externalArticles, ...newArticles]
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    if (error) {
+      console.error('❌ Supabase upsert error:', error)
+      throw new Error(`Database error: ${error.message}`)
+    }
 
-    // Keep only the newest 15 external articles
-    const limitedExternalArticles = allExternalArticles.slice(0, MAX_EXTERNAL_ARTICLES)
+    // Get total count of news articles
+    const { count, error: countError } = await supabase
+      .from('news')
+      .select('*', { count: 'exact', head: true })
+      .eq('source_type', 'external')
 
-    // Combine club articles with limited external articles
-    const finalNews = [...clubArticles, ...limitedExternalArticles]
-      .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    if (countError) {
+      console.error('Error getting count:', countError)
+    }
 
-    // Write back to file
-    writeFileSync(NEWS_FILE_PATH, JSON.stringify(finalNews, null, 2))
+    const addedCount = data?.length || 0
+    console.log(`✅ Added/updated ${addedCount} articles. Total external articles: ${count}`)
 
     return NextResponse.json({
       success: true,
-      message: `Added ${newArticles.length} new articles, keeping ${limitedExternalArticles.length} external articles total`,
-      added: newArticles.length,
-      total: finalNews.length
+      message: `Added/updated ${addedCount} articles. Total external articles: ${count || 'unknown'}`,
+      added: addedCount,
+      total: count || 0
     })
 
   } catch (error) {
-    console.error('Error processing news articles:', error)
+    console.error('💥 Error processing news articles:', error)
     console.error('Error details:', {
       name: error instanceof Error ? error.name : 'Unknown',
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : 'No stack trace'
     })
     return NextResponse.json(
-      { success: false, error: 'Failed to process articles', details: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        success: false,
+        error: 'Failed to process articles',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

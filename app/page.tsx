@@ -1,8 +1,8 @@
 import Link from "next/link"
-import { NewsItem, EventItem, ProjectItem } from '@/lib/types'
+import { EventItem, ProjectItem } from '@/lib/types'
 import { formatDate, isUpcoming } from '@/lib/date'
 import { Newspaper, Calendar, Rocket } from 'lucide-react'
-import newsData from '@/app/data/news.json'
+import { getNews } from '@/lib/news'
 import eventsDataRaw from '@/app/data/events.json'
 import projectsData from '@/app/data/projects.json'
 import NewsletterSignup from '@/components/NewsletterSignup'
@@ -10,10 +10,13 @@ import NewsletterSignup from '@/components/NewsletterSignup'
 // Handle both old format (array) and new format (object with events array)
 type EventsData = EventItem[] | { lastSyncedAt?: string; events: EventItem[] }
 
-export default function Home() {
-  const news = (newsData as NewsItem[])
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 3)
+// Disable caching to ensure fresh data
+export const revalidate = 0
+
+export default async function Home() {
+  // Fetch latest 3 news articles from Supabase
+  const allNews = await getNews()
+  const news = allNews.slice(0, 3)
 
   const eventsData = eventsDataRaw as EventsData
   const events = Array.isArray(eventsData) ? eventsData : eventsData.events

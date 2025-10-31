@@ -41,31 +41,29 @@ export default function NewsletterSignup({ variant = 'footer', className = '' }:
     console.log('🔄 Newsletter signup attempt:', payload)
 
     try {
-      console.log('📡 Making fetch request to webhook...')
-      const response = await fetch('https://seabass34.app.n8n.cloud/webhook/859ca13a-afa5-4879-946b-4f4cca54527c', {
+      console.log('📡 Making fetch request to API...')
+      const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
-        mode: 'cors'
       })
 
       console.log('📥 Response received:', {
         status: response.status,
         ok: response.ok,
-        headers: Object.fromEntries(response.headers.entries())
       })
 
-      if (response.ok) {
+      const data = await response.json()
+
+      if (response.ok && data.success) {
         console.log('✅ Newsletter signup successful!')
         setStatus('success')
         setEmail('')
       } else {
-        console.error('❌ Newsletter signup failed with status:', response.status)
-        const responseText = await response.text()
-        console.error('Response body:', responseText)
-        throw new Error(`HTTP ${response.status}`)
+        console.error('❌ Newsletter signup failed:', data)
+        throw new Error(data.error || `HTTP ${response.status}`)
       }
     } catch (error) {
       console.error('💥 Newsletter signup error:', error)

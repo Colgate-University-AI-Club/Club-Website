@@ -2,9 +2,8 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowLeft, ExternalLink } from 'lucide-react'
-import { NewsItem } from '@/lib/types'
 import { formatDate } from '@/lib/date'
-import newsData from '@/app/data/news.json'
+import { getNews, getNewsById } from '@/lib/news'
 
 interface NewsArticlePageProps {
   params: Promise<{
@@ -12,10 +11,12 @@ interface NewsArticlePageProps {
   }>
 }
 
+// Disable static generation for dynamic data
+export const dynamic = 'force-dynamic'
+
 export async function generateMetadata({ params }: NewsArticlePageProps): Promise<Metadata> {
   const { id } = await params
-  const news = newsData as NewsItem[]
-  const article = news.find(item => item.id === id)
+  const article = await getNewsById(id)
 
   if (!article) {
     return {
@@ -30,7 +31,8 @@ export async function generateMetadata({ params }: NewsArticlePageProps): Promis
 }
 
 export async function generateStaticParams() {
-  const news = newsData as NewsItem[]
+  // Fetch all news to generate static params
+  const news = await getNews()
   return news.map(item => ({
     id: item.id
   }))
@@ -38,8 +40,7 @@ export async function generateStaticParams() {
 
 export default async function NewsArticlePage({ params }: NewsArticlePageProps) {
   const { id } = await params
-  const news = newsData as NewsItem[]
-  const article = news.find(item => item.id === id)
+  const article = await getNewsById(id)
 
   if (!article) {
     notFound()
