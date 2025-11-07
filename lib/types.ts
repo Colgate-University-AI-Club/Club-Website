@@ -113,3 +113,34 @@ export interface SupabaseJobRow {
   created_at: string;
   updated_at: string;
 }
+
+// Resource types for the Resources page
+export interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  category: ResourceCategory;
+  tags: string[];
+  fileType: string; // Extension: pdf, pptx, py, ipynb, etc.
+  fileSize?: string; // Human readable: "2.3 MB"
+  downloadUrl?: string; // GitHub raw URL for files
+  embedUrl?: string; // YouTube/external embeds
+  githubPath?: string; // Path in club-resources repo
+  thumbnail?: string; // Preview image URL
+  author?: string;
+  course?: string; // Associated course if applicable
+  uploadedAt: string;
+  lastModified?: string;
+  downloads?: number;
+  views?: number;
+  source?: 'manual' | 'google-drive'; // Track source of resource
+}
+
+export type ResourceCategory =
+  | 'presentation'
+  | 'document'
+  | 'video'
+  | 'template'
+  | 'dataset'
+  | 'code'
+  | 'other';

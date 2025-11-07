@@ -1,0 +1,175 @@
+{
+  "lastUpdated": "2025-11-07T22:25:00.479Z",
+  "resources": [
+    {
+      "id": "gdrive-1MrFqQ9f0FV2tuVnvrPgVsMG2fSIUQYoL",
+      "title": "N8n Creators Official Templates",
+      "description": "N8n Creators Official Templates template for projects and assignments",
+      "category": "template",
+      "tags": [
+        "template"
+      ],
+      "fileType": "webloc",
+      "fileSize": "248 Bytes",
+      "downloadUrl": "https://drive.google.com/uc?id=1MrFqQ9f0FV2tuVnvrPgVsMG2fSIUQYoL&export=download",
+      "author": "Google Drive",
+      "uploadedAt": "2025-11-05T00:20:38.886Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1M3smN8rc-gp5fQ2DEDAl4lfkCHcyi5Oc",
+      "title": "Github.com:zie619:n8n Workflows.git",
+      "description": "Resource file: Github.com:zie619:n8n Workflows.git",
+      "category": "other",
+      "tags": [
+        "ZIE619"
+      ],
+      "fileType": "webloc",
+      "fileSize": "266 Bytes",
+      "downloadUrl": "https://drive.google.com/uc?id=1M3smN8rc-gp5fQ2DEDAl4lfkCHcyi5Oc&export=download",
+      "author": "Google Drive",
+      "uploadedAt": "2025-11-05T00:19:44.000Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1f8HP_kw8HHUwem-eaItj_aUW6HyJRdT_",
+      "title": "Github.com:enescingoz:awesome N8n Templates.git",
+      "description": "Github.com:enescingoz:awesome N8n Templates.git template for projects and assignments",
+      "category": "template",
+      "tags": [
+        "template"
+      ],
+      "fileType": "webloc",
+      "fileSize": "278 Bytes",
+      "downloadUrl": "https://drive.google.com/uc?id=1f8HP_kw8HHUwem-eaItj_aUW6HyJRdT_&export=download",
+      "author": "Google Drive",
+      "uploadedAt": "2025-11-05T00:19:19.000Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1DD4WfMjF5x57t2GCv-HOkF6nDIlpTAYz",
+      "title": "Github.com:wassupjay:n8n Free Templates.git",
+      "description": "Github.com:wassupjay:n8n Free Templates.git template for projects and assignments",
+      "category": "template",
+      "tags": [
+        "template"
+      ],
+      "fileType": "webloc",
+      "fileSize": "274 Bytes",
+      "downloadUrl": "https://drive.google.com/uc?id=1DD4WfMjF5x57t2GCv-HOkF6nDIlpTAYz&export=download",
+      "author": "Google Drive",
+      "uploadedAt": "2025-11-05T00:18:51.000Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-19wbhAXzTCI-ufJvxmiO4NHyWZfXQrWGzjY6cKxwtiOM",
+      "title": "Ai Club Optimized Prompting",
+      "description": "Document covering Ai Club Optimized Prompting",
+      "category": "document",
+      "tags": [
+        "ai"
+      ],
+      "fileType": "file",
+      "fileSize": "11.39 KB",
+      "downloadUrl": "https://docs.google.com/document/d/19wbhAXzTCI-ufJvxmiO4NHyWZfXQrWGzjY6cKxwtiOM/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-31T06:31:42.964Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1-vrNIbTvqE1-AzJPeziBh3uxztAnhMxylOyQh4yzLAk",
+      "title": "Ai Club Introduction To N8n",
+      "description": "Document covering Ai Club Introduction To N8n",
+      "category": "document",
+      "tags": [
+        "ai",
+        "introduction",
+        "intro"
+      ],
+      "fileType": "file",
+      "fileSize": "12.73 KB",
+      "downloadUrl": "https://docs.google.com/document/d/1-vrNIbTvqE1-AzJPeziBh3uxztAnhMxylOyQh4yzLAk/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-31T06:31:25.423Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-12zSpkVt3nPN62SvmfFg3b3Juxf7qAj3u",
+      "title": "Presentation Colgate Artificial Intelligence Club",
+      "description": "Document covering Presentation Colgate Artificial Intelligence Club",
+      "category": "document",
+      "tags": [
+        "artificial intelligence",
+        "presentation"
+      ],
+      "fileType": "pdf",
+      "fileSize": "5.68 MB",
+      "downloadUrl": "https://drive.google.com/uc?id=12zSpkVt3nPN62SvmfFg3b3Juxf7qAj3u&export=download",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-31T04:59:44.000Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1WAXY02pBC7ln6ygZEJvCLcWbUGesCDlOgQ8hGFup8m8",
+      "title": "Ai Club Presentation What Is Ai & How Get Started",
+      "description": "Presentation slides on Ai Club Presentation What Is Ai & How Get Started",
+      "category": "presentation",
+      "tags": [
+        "ai",
+        "presentation"
+      ],
+      "fileType": "file",
+      "fileSize": "894.7 KB",
+      "downloadUrl": "https://docs.google.com/presentation/d/1WAXY02pBC7ln6ygZEJvCLcWbUGesCDlOgQ8hGFup8m8/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-29T21:55:29.503Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-12c61usdWwQ4qCYN-Z0N1Ee66PNhjkhXUTuC4ll2sch8",
+      "title": "Automated Posting Ai Club",
+      "description": "Dataset for Automated Posting Ai Club analysis and experiments",
+      "category": "dataset",
+      "tags": [
+        "ai"
+      ],
+      "fileType": "file",
+      "fileSize": "3.82 KB",
+      "downloadUrl": "https://docs.google.com/spreadsheets/d/12c61usdWwQ4qCYN-Z0N1Ee66PNhjkhXUTuC4ll2sch8/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-17T20:16:25.588Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-11_yGW3MK7_13CliQljMTtsrIG1NJqW7CjHSM0IJLhx8",
+      "title": "Ai Club Introductory Meeting",
+      "description": "Presentation slides on Ai Club Introductory Meeting",
+      "category": "presentation",
+      "tags": [
+        "ai",
+        "intro"
+      ],
+      "fileType": "file",
+      "fileSize": "7.76 MB",
+      "downloadUrl": "https://docs.google.com/presentation/d/11_yGW3MK7_13CliQljMTtsrIG1NJqW7CjHSM0IJLhx8/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-05T14:42:45.735Z",
+      "source": "google-drive"
+    },
+    {
+      "id": "gdrive-1rWpGdTOx9k1YavIq8VUUtqnboWQwYud4Q9UJ5OFy5R4",
+      "title": "Ai Club Ideas & Preferences",
+      "description": "Resource file: Ai Club Ideas & Preferences",
+      "category": "other",
+      "tags": [
+        "ai"
+      ],
+      "fileType": "file",
+      "fileSize": "3.33 KB",
+      "downloadUrl": "https://docs.google.com/forms/d/1rWpGdTOx9k1YavIq8VUUtqnboWQwYud4Q9UJ5OFy5R4/edit?usp=drivesdk",
+      "author": "Google Drive",
+      "uploadedAt": "2025-10-02T21:05:52.893Z",
+      "source": "google-drive"
+    }
+  ]
+}

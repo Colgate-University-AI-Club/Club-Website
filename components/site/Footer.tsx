@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import NewsletterSignup from '@/components/NewsletterSignup'
+import { ContributeForm } from '@/components/site/ContributeForm'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
@@ -63,7 +64,7 @@ export default function Footer() {
               <li><Link href="/projects" className="text-muted-foreground hover:text-primary transition-colors">Projects</Link></li>
               <li><Link href="/news" className="text-muted-foreground hover:text-primary transition-colors">News</Link></li>
               <li><Link href="/jobs" className="text-muted-foreground hover:text-primary transition-colors">Job Board</Link></li>
-              <li><Link href="/contribute" className="text-muted-foreground hover:text-primary transition-colors">Contribute</Link></li>
+              <li><Link href="/resources" className="text-muted-foreground hover:text-primary transition-colors">Resources</Link></li>
               <li><Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">About</Link></li>
             </ul>
           </div>
@@ -78,7 +79,25 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Contribute Section */}
         <div className="mt-12 pt-8 border-t border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div>
+              <ContributeForm />
+            </div>
+            <div className="md:pl-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Get Involved</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                The Colgate AI Club is always looking for new resources, ideas, and contributions from our community. Whether you&apos;ve found an interesting article, created a helpful tutorial, or discovered a useful tool, we&apos;d love to hear about it!
+              </p>
+              <p className="text-sm text-gray-600">
+                You can also contribute by joining our events, participating in projects, or helping other members learn and grow.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="pt-8 border-t border-border">
           <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <p className="text-sm text-muted-foreground">
               © {currentYear} Colgate AI Club. All rights reserved.

@@ -16,7 +16,7 @@ export default function NavBar() {
     { href: '/jobs', label: 'Jobs' },
     { href: '/events', label: 'Events' },
     { href: '/projects', label: 'Projects' },
-    { href: '/contribute', label: 'Contribute' },
+    { href: '/resources', label: 'Resources' },
     { href: '/about', label: 'About' },
   ]
 
